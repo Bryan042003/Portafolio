@@ -1,0 +1,3445 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#06090b">
+  <meta name="description" content="Portafolio de Bryan Castro Solís, desarrollador de software e Ingeniero en Computación de Costa Rica.">
+  <meta name="author" content="Bryan Castro Solís">
+  <meta property="og:title" content="Bryan Castro | Desarrollador de software">
+  <meta property="og:description" content="Software con propósito, desde la arquitectura hasta la experiencia final.">
+  <meta property="og:type" content="website">
+  <title>Bryan Castro | Desarrollador de software</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>document.documentElement.classList.add('js');</script>
+  <style>
+    :root {
+      --bg: #06090b;
+      --bg-deep: #030506;
+      --surface: rgba(13, 19, 22, 0.82);
+      --surface-solid: #0d1316;
+      --surface-bright: #121b1f;
+      --line: rgba(225, 255, 244, 0.12);
+      --line-bright: rgba(94, 234, 212, 0.38);
+      --text: #f0f7f4;
+      --muted: #94a7a1;
+      --cyan: #5eead4;
+      --acid: #b8f56a;
+      --warm: #ff8a5b;
+      --cyan-soft: rgba(94, 234, 212, 0.11);
+      --acid-soft: rgba(184, 245, 106, 0.1);
+      --display: "Space Grotesk", sans-serif;
+      --mono: "JetBrains Mono", monospace;
+      --page: min(1180px, calc(100% - 48px));
+      --radius-lg: 28px;
+      --radius-md: 18px;
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scrollbar-color: var(--cyan) var(--bg);
+    }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      overflow-x: hidden;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 8% 12%, rgba(94, 234, 212, 0.08), transparent 27rem),
+        radial-gradient(circle at 92% 38%, rgba(184, 245, 106, 0.055), transparent 24rem),
+        linear-gradient(180deg, var(--bg-deep), var(--bg) 18%, #071012 62%, var(--bg-deep));
+      font-family: var(--display);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body.menu-open {
+      overflow: hidden;
+    }
+
+    ::selection {
+      color: #04110e;
+      background: var(--cyan);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      color: inherit;
+      font: inherit;
+    }
+
+    img,
+    svg {
+      display: block;
+    }
+
+    .skip-link {
+      position: fixed;
+      z-index: 1000;
+      top: 12px;
+      left: 12px;
+      padding: 10px 14px;
+      color: var(--bg);
+      background: var(--cyan);
+      border-radius: 8px;
+      transform: translateY(-160%);
+      transition: transform 180ms ease;
+    }
+
+    .skip-link:focus {
+      transform: translateY(0);
+    }
+
+    .scroll-progress {
+      position: fixed;
+      z-index: 999;
+      inset: 0 auto auto 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--cyan), var(--acid));
+      box-shadow: 0 0 18px var(--cyan);
+    }
+
+    #network-canvas {
+      position: fixed;
+      z-index: -2;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      opacity: 0.7;
+    }
+
+    .noise {
+      position: fixed;
+      z-index: -1;
+      inset: 0;
+      opacity: 0.025;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.9'/%3E%3C/svg%3E");
+    }
+
+    .cursor-glow {
+      position: fixed;
+      z-index: -1;
+      width: 420px;
+      height: 420px;
+      border-radius: 50%;
+      pointer-events: none;
+      opacity: 0;
+      background: radial-gradient(circle, rgba(94, 234, 212, 0.07), transparent 67%);
+      transform: translate(-50%, -50%);
+      transition: opacity 300ms ease;
+    }
+
+    .cursor-glow.visible {
+      opacity: 1;
+    }
+
+    .page-shell {
+      width: var(--page);
+      margin-inline: auto;
+    }
+
+    .site-header {
+      position: fixed;
+      z-index: 100;
+      inset: 0 0 auto;
+      border-bottom: 1px solid transparent;
+      transition: background 250ms ease, border-color 250ms ease, backdrop-filter 250ms ease;
+    }
+
+    .site-header.scrolled {
+      border-color: var(--line);
+      background: rgba(4, 8, 9, 0.78);
+      backdrop-filter: blur(18px);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 76px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+    }
+
+    .brand-mark {
+      display: grid;
+      width: 42px;
+      height: 42px;
+      place-items: center;
+      color: var(--bg-deep);
+      background: var(--cyan);
+      border-radius: 11px 4px 11px 4px;
+      font-family: var(--mono);
+      font-size: 0.86rem;
+      box-shadow: 0 0 30px rgba(94, 234, 212, 0.2);
+      transform: rotate(-3deg);
+    }
+
+    .brand-name {
+      font-size: 1rem;
+    }
+
+    .brand-name span {
+      color: var(--cyan);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 34px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .nav-link {
+      position: relative;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 0.76rem;
+      letter-spacing: 0.04em;
+      transition: color 180ms ease;
+    }
+
+    .nav-link::after {
+      position: absolute;
+      right: 0;
+      bottom: -9px;
+      left: 0;
+      height: 1px;
+      content: "";
+      background: var(--cyan);
+      transform: scaleX(0);
+      transform-origin: right;
+      transition: transform 250ms var(--ease);
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      color: var(--text);
+    }
+
+    .nav-link:hover::after,
+    .nav-link.active::after {
+      transform: scaleX(1);
+      transform-origin: left;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .language-switch,
+    .menu-toggle {
+      display: inline-grid;
+      min-width: 42px;
+      height: 42px;
+      padding: 0 11px;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: rgba(255, 255, 255, 0.025);
+      cursor: pointer;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      transition: border-color 180ms ease, color 180ms ease, background 180ms ease;
+    }
+
+    .language-switch:hover,
+    .menu-toggle:hover {
+      color: var(--cyan);
+      border-color: var(--line-bright);
+      background: var(--cyan-soft);
+    }
+
+    .menu-toggle {
+      display: none;
+      gap: 4px;
+      align-content: center;
+    }
+
+    .menu-toggle span {
+      width: 18px;
+      height: 1px;
+      background: currentColor;
+      transition: transform 250ms ease, opacity 250ms ease;
+    }
+
+    .menu-toggle[aria-expanded="true"] span:first-child {
+      transform: translateY(2.5px) rotate(45deg);
+    }
+
+    .menu-toggle[aria-expanded="true"] span:last-child {
+      transform: translateY(-2.5px) rotate(-45deg);
+    }
+
+    main {
+      overflow: hidden;
+    }
+
+    .hero {
+      position: relative;
+      display: grid;
+      min-height: 100svh;
+      padding: 142px 0 82px;
+      align-items: center;
+    }
+
+    .hero::before {
+      position: absolute;
+      z-index: -1;
+      top: 18%;
+      left: 50%;
+      width: min(980px, 90vw);
+      height: min(580px, 60vw);
+      content: "";
+      border: 1px solid rgba(94, 234, 212, 0.07);
+      background-image:
+        linear-gradient(rgba(94, 234, 212, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(94, 234, 212, 0.035) 1px, transparent 1px);
+      background-size: 42px 42px;
+      border-radius: 50%;
+      mask-image: linear-gradient(to bottom, black, transparent 82%);
+      transform: translateX(-50%) perspective(600px) rotateX(62deg);
+      transform-origin: center bottom;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.22fr) minmax(340px, 0.78fr);
+      gap: clamp(48px, 7vw, 92px);
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 24px;
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 0.76rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .status-dot {
+      position: relative;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--acid);
+      box-shadow: 0 0 16px rgba(184, 245, 106, 0.8);
+    }
+
+    .status-dot::after {
+      position: absolute;
+      inset: -5px;
+      content: "";
+      border: 1px solid rgba(184, 245, 106, 0.4);
+      border-radius: inherit;
+      animation: status-pulse 2.2s ease-out infinite;
+    }
+
+    @keyframes status-pulse {
+      70%,
+      100% {
+        opacity: 0;
+        transform: scale(1.8);
+      }
+    }
+
+    .hero-kicker {
+      margin: 0 0 4px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: clamp(0.8rem, 1.2vw, 0.94rem);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .hero h1 {
+      max-width: 820px;
+      margin: 0;
+      font-size: clamp(4rem, 9vw, 8.4rem);
+      line-height: 0.86;
+      letter-spacing: -0.085em;
+    }
+
+    .hero h1 .outline {
+      display: block;
+      color: transparent;
+      -webkit-text-stroke: 1.5px rgba(240, 247, 244, 0.58);
+    }
+
+    .role-line {
+      display: flex;
+      min-height: 38px;
+      margin: 28px 0 18px;
+      align-items: center;
+      gap: 12px;
+      color: var(--acid);
+      font-family: var(--mono);
+      font-size: clamp(0.92rem, 2vw, 1.16rem);
+    }
+
+    .role-line::before {
+      content: ">";
+      color: var(--cyan);
+    }
+
+    .typed-role::after {
+      display: inline-block;
+      width: 8px;
+      height: 1.12em;
+      margin-left: 7px;
+      vertical-align: -0.15em;
+      content: "";
+      background: currentColor;
+      animation: blink 800ms steps(2, start) infinite;
+    }
+
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+
+    .hero-copy {
+      max-width: 650px;
+      margin: 0;
+      color: var(--muted);
+      font-size: clamp(1rem, 1.45vw, 1.15rem);
+    }
+
+    .hero-copy strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 13px;
+      margin-top: 34px;
+    }
+
+    .button {
+      position: relative;
+      display: inline-flex;
+      min-height: 50px;
+      padding: 0 20px;
+      overflow: hidden;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      cursor: pointer;
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      letter-spacing: 0.025em;
+      transition: color 220ms ease, border-color 220ms ease, transform 220ms var(--ease), background 220ms ease;
+    }
+
+    .button svg {
+      width: 17px;
+      height: 17px;
+      transition: transform 220ms var(--ease);
+    }
+
+    .button-primary {
+      color: #04110e;
+      border-color: var(--cyan);
+      background: var(--cyan);
+      box-shadow: 0 12px 44px rgba(94, 234, 212, 0.16);
+    }
+
+    .button-secondary {
+      background: rgba(255, 255, 255, 0.025);
+      backdrop-filter: blur(10px);
+    }
+
+    .button:hover {
+      transform: translateY(-3px);
+    }
+
+    .button-primary:hover {
+      color: var(--bg);
+      background: var(--acid);
+      border-color: var(--acid);
+    }
+
+    .button-secondary:hover {
+      color: var(--cyan);
+      border-color: var(--line-bright);
+      background: var(--cyan-soft);
+    }
+
+    .button:hover svg {
+      transform: translate(2px, -2px);
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 24px;
+      margin-top: 28px;
+      color: #738780;
+      font-family: var(--mono);
+      font-size: 0.7rem;
+    }
+
+    .hero-meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .hero-meta span::before {
+      width: 4px;
+      height: 4px;
+      content: "";
+      border-radius: 50%;
+      background: var(--cyan);
+    }
+
+    .hero-visual {
+      position: relative;
+      perspective: 1000px;
+    }
+
+    .terminal-card {
+      position: relative;
+      min-height: 430px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: linear-gradient(145deg, rgba(19, 29, 32, 0.96), rgba(7, 11, 13, 0.93));
+      box-shadow: 0 32px 100px rgba(0, 0, 0, 0.48), inset 0 1px rgba(255, 255, 255, 0.035);
+      transform: rotateY(-4deg) rotateX(2deg);
+      transform-style: preserve-3d;
+    }
+
+    .terminal-card::after {
+      position: absolute;
+      inset: 0;
+      content: "";
+      pointer-events: none;
+      background: linear-gradient(110deg, transparent 35%, rgba(94, 234, 212, 0.055), transparent 58%);
+      transform: translateX(-100%);
+      animation: screen-scan 6s ease-in-out infinite;
+    }
+
+    @keyframes screen-scan {
+      0%, 55% { transform: translateX(-100%); }
+      80%, 100% { transform: translateX(100%); }
+    }
+
+    .terminal-bar {
+      display: flex;
+      height: 52px;
+      padding: 0 18px;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--line);
+      color: #6e827b;
+      font-family: var(--mono);
+      font-size: 0.66rem;
+    }
+
+    .terminal-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .terminal-dots span {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #34423e;
+    }
+
+    .terminal-dots span:nth-child(1) { background: var(--warm); }
+    .terminal-dots span:nth-child(2) { background: #f2ca61; }
+    .terminal-dots span:nth-child(3) { background: var(--cyan); }
+
+    .terminal-body {
+      padding: 32px 28px;
+      font-family: var(--mono);
+      font-size: clamp(0.7rem, 1vw, 0.82rem);
+      line-height: 2;
+    }
+
+    .code-line {
+      display: grid;
+      grid-template-columns: 22px 1fr;
+      gap: 12px;
+    }
+
+    .line-number { color: #43544f; user-select: none; }
+    .code-key { color: #ff9f7b; }
+    .code-var { color: #8fe9dc; }
+    .code-string { color: #c9f589; }
+    .code-muted { color: #647971; }
+
+    .terminal-result {
+      margin: 21px 0 0 34px;
+      padding: 13px 15px;
+      color: var(--cyan);
+      border: 1px solid rgba(94, 234, 212, 0.16);
+      border-radius: 9px;
+      background: rgba(94, 234, 212, 0.055);
+      font-size: 0.7rem;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(1deg); }
+      50% { transform: translateY(-9px) rotate(-1deg); }
+    }
+
+    .scroll-cue {
+      position: absolute;
+      bottom: 26px;
+      left: 50%;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #566963;
+      font-family: var(--mono);
+      font-size: 0.61rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transform: translateX(-50%) rotate(90deg) translateX(50%);
+      transform-origin: center;
+    }
+
+    .scroll-cue::after {
+      width: 34px;
+      height: 1px;
+      content: "";
+      background: linear-gradient(90deg, var(--cyan), transparent);
+    }
+
+    .tech-rail {
+      overflow: hidden;
+      border-block: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.012);
+      transform: rotate(-1deg) scale(1.02);
+    }
+
+    .tech-track {
+      display: flex;
+      width: max-content;
+      padding: 16px 0;
+      animation: marquee 30s linear infinite;
+    }
+
+    .tech-group {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      padding-right: 28px;
+      color: #6f827c;
+      font-family: var(--mono);
+      font-size: 0.69rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .tech-group span {
+      display: inline-flex;
+      align-items: center;
+      gap: 28px;
+    }
+
+    .tech-group span::after {
+      color: var(--cyan);
+      content: "✦";
+      font-size: 0.55rem;
+    }
+
+    @keyframes marquee { to { transform: translateX(-50%); } }
+
+    .section {
+      position: relative;
+      padding: 78px 0;
+    }
+
+    .section-label {
+      display: flex;
+      margin-bottom: 26px;
+      align-items: center;
+      gap: 12px;
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .section-label::before {
+      width: 30px;
+      height: 1px;
+      content: "";
+      background: var(--cyan);
+    }
+
+    .section-heading {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(280px, 0.45fr);
+      gap: 46px;
+      margin-bottom: 64px;
+      align-items: end;
+    }
+
+    .section-heading h2 {
+      max-width: 800px;
+      margin: 0;
+      font-size: clamp(2.5rem, 5.8vw, 5.4rem);
+      line-height: 0.98;
+      letter-spacing: -0.065em;
+    }
+
+    .section-heading h2 em {
+      color: var(--cyan);
+      font-style: normal;
+    }
+
+    .section-heading p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .bento-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 16px;
+    }
+
+    .bento-card {
+      position: relative;
+      min-height: 220px;
+      padding: 28px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: linear-gradient(145deg, rgba(17, 25, 28, 0.76), rgba(8, 13, 15, 0.84));
+      transition: border-color 260ms ease, transform 260ms var(--ease), background 260ms ease;
+    }
+
+    .bento-card:hover {
+      border-color: rgba(94, 234, 212, 0.25);
+      background: linear-gradient(145deg, rgba(20, 31, 34, 0.88), rgba(8, 13, 15, 0.9));
+      transform: translateY(-4px);
+    }
+
+    .bento-main {
+      display: flex;
+      min-height: 340px;
+      grid-column: span 12;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .bento-small { grid-column: span 4; }
+
+    .card-index {
+      color: #52645e;
+      font-family: var(--mono);
+      font-size: 0.65rem;
+    }
+
+    .bento-main blockquote {
+      max-width: 680px;
+      margin: 48px 0 0;
+      font-size: clamp(1.6rem, 3.2vw, 2.8rem);
+      font-weight: 500;
+      line-height: 1.16;
+      letter-spacing: -0.045em;
+    }
+
+    .bento-main blockquote span { color: var(--cyan); }
+
+    .bento-footer {
+      display: flex;
+      padding-top: 24px;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--muted);
+      border-top: 1px solid var(--line);
+      font-family: var(--mono);
+      font-size: 0.66rem;
+    }
+
+    .bento-small h3 {
+      margin: 0;
+      font-size: 1.15rem;
+      letter-spacing: -0.03em;
+    }
+
+    .bento-small p {
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .bento-icon {
+      display: grid;
+      width: 48px;
+      height: 48px;
+      margin: 42px 0 26px;
+      place-items: center;
+      color: var(--cyan);
+      border: 1px solid rgba(94, 234, 212, 0.2);
+      border-radius: 13px;
+      background: var(--cyan-soft);
+    }
+
+    .bento-icon svg { width: 22px; }
+
+    .language-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 26px;
+    }
+
+    .language-list span,
+    .tag {
+      padding: 7px 10px;
+      color: #aabbb5;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.018);
+      font-family: var(--mono);
+      font-size: 0.62rem;
+    }
+
+    .experience-list {
+      position: relative;
+      margin-top: 20px;
+    }
+
+    .experience-list::before {
+      position: absolute;
+      top: 18px;
+      bottom: 18px;
+      left: 177px;
+      width: 1px;
+      content: "";
+      background: linear-gradient(var(--cyan), rgba(94, 234, 212, 0.05));
+    }
+
+    .experience-item {
+      position: relative;
+      display: grid;
+      grid-template-columns: 145px 1fr;
+      gap: 64px;
+      padding: 0 0 72px;
+    }
+
+    .experience-item:last-child { padding-bottom: 0; }
+
+    .experience-date {
+      padding-top: 5px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      text-align: right;
+    }
+
+    .experience-dot {
+      position: absolute;
+      top: 8px;
+      left: 172px;
+      width: 11px;
+      height: 11px;
+      border: 2px solid var(--bg);
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 0 5px rgba(94, 234, 212, 0.1), 0 0 24px rgba(94, 234, 212, 0.4);
+    }
+
+    .experience-card {
+      padding: 30px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: linear-gradient(135deg, rgba(15, 23, 26, 0.72), rgba(8, 12, 14, 0.78));
+      transition: border-color 250ms ease, transform 250ms var(--ease);
+    }
+
+    .experience-card:hover {
+      border-color: rgba(94, 234, 212, 0.25);
+      transform: translateX(6px);
+    }
+
+    .experience-topline {
+      display: flex;
+      margin-bottom: 22px;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .experience-card h3 {
+      margin: 0;
+      font-size: clamp(1.35rem, 2.4vw, 2rem);
+      line-height: 1.1;
+      letter-spacing: -0.04em;
+    }
+
+    .company {
+      display: block;
+      margin-top: 8px;
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 0.74rem;
+    }
+
+    .current-badge {
+      flex: 0 0 auto;
+      padding: 5px 9px;
+      color: var(--acid);
+      border: 1px solid rgba(184, 245, 106, 0.2);
+      border-radius: 999px;
+      background: var(--acid-soft);
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      text-transform: uppercase;
+    }
+
+    .experience-card p {
+      max-width: 790px;
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .experience-points {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px 22px;
+      margin: 26px 0 0;
+      padding: 22px 0 0;
+      border-top: 1px solid var(--line);
+      list-style: none;
+    }
+
+    .experience-points li {
+      position: relative;
+      padding-left: 16px;
+      color: #a4b5af;
+      font-size: 0.82rem;
+    }
+
+    .experience-points li::before {
+      position: absolute;
+      top: 0.73em;
+      left: 0;
+      width: 5px;
+      height: 5px;
+      content: "";
+      border-radius: 1px;
+      background: var(--cyan);
+      transform: rotate(45deg);
+    }
+
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 74px;
+    }
+
+    .project-card {
+      position: relative;
+      display: flex;
+      min-height: 390px;
+      padding: 30px;
+      overflow: hidden;
+      flex-direction: column;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: var(--surface);
+      transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+      transition: border-color 250ms ease, transform 180ms ease;
+      will-change: transform;
+    }
+
+    .project-card:first-child {
+      background:
+        radial-gradient(circle at 88% 8%, rgba(94, 234, 212, 0.15), transparent 17rem),
+        linear-gradient(145deg, rgba(15, 29, 31, 0.95), rgba(7, 12, 14, 0.9));
+    }
+
+    .project-card:nth-child(2) {
+      background:
+        radial-gradient(circle at 86% 10%, rgba(255, 138, 91, 0.11), transparent 16rem),
+        linear-gradient(145deg, rgba(22, 23, 22, 0.95), rgba(8, 12, 13, 0.9));
+    }
+
+    .project-card:hover { border-color: rgba(94, 234, 212, 0.3); }
+
+    .live-project-card {
+      display: block;
+      min-height: 0;
+      padding: 0;
+      transform: none;
+      will-change: auto;
+    }
+
+    .live-project-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .live-browser {
+      overflow: hidden;
+      border-bottom: 1px solid var(--line);
+      background: #080d0f;
+    }
+
+    .live-browser-bar {
+      display: grid;
+      min-height: 46px;
+      padding: 0 14px;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      gap: 13px;
+      align-items: center;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.025);
+    }
+
+    .browser-dots {
+      display: flex;
+      gap: 5px;
+    }
+
+    .browser-dots span {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #34423e;
+    }
+
+    .browser-dots span:first-child { background: var(--warm); }
+    .browser-dots span:nth-child(2) { background: #f2ca61; }
+    .browser-dots span:last-child { background: var(--cyan); }
+
+    .browser-url {
+      overflow: hidden;
+      color: #657972;
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .browser-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .live-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      color: var(--acid);
+      font-family: var(--mono);
+      font-size: 0.52rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .live-status::before {
+      width: 5px;
+      height: 5px;
+      content: "";
+      border-radius: 50%;
+      background: currentColor;
+      box-shadow: 0 0 9px currentColor;
+    }
+
+    .preview-toggle,
+    .browser-external {
+      display: inline-flex;
+      height: 28px;
+      padding: 0 8px;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      color: #859991;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: rgba(255, 255, 255, 0.018);
+      cursor: pointer;
+      font-family: var(--mono);
+      font-size: 0.52rem;
+      transition: color 180ms ease, border-color 180ms ease, background 180ms ease;
+    }
+
+    .browser-external {
+      width: 28px;
+      padding: 0;
+    }
+
+    .preview-toggle svg,
+    .browser-external svg {
+      width: 12px;
+      height: 12px;
+    }
+
+    .preview-toggle:hover,
+    .browser-external:hover,
+    .live-project-card.is-interactive .preview-toggle {
+      color: var(--cyan);
+      border-color: rgba(94, 234, 212, 0.3);
+      background: var(--cyan-soft);
+    }
+
+    .live-frame {
+      position: relative;
+      height: clamp(255px, 28vw, 340px);
+      overflow: hidden;
+      background:
+        linear-gradient(110deg, transparent 35%, rgba(94, 234, 212, 0.04), transparent 60%),
+        #0a1012;
+    }
+
+    .live-frame iframe {
+      width: 200%;
+      height: 200%;
+      border: 0;
+      background: #fff;
+      transform: scale(0.5);
+      transform-origin: top left;
+    }
+
+    .frame-shield {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      background: linear-gradient(180deg, transparent 70%, rgba(4, 8, 9, 0.15));
+      cursor: default;
+    }
+
+    .live-project-card.is-interactive .frame-shield {
+      pointer-events: none;
+    }
+
+    .live-project-card.is-interactive .live-frame {
+      box-shadow: inset 0 0 0 2px rgba(94, 234, 212, 0.28);
+    }
+
+    .live-project-content {
+      margin: 0;
+      padding: 27px 28px 29px;
+    }
+
+    .live-project-eyebrow {
+      display: flex;
+      margin-bottom: 14px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .live-project-eyebrow .project-number {
+      position: static;
+    }
+
+    .live-project-eyebrow .project-year:only-child,
+    .product-status-row .product-status:only-child {
+      margin-left: auto;
+    }
+
+    .project-year {
+      color: #657972;
+      font-family: var(--mono);
+      font-size: 0.58rem;
+    }
+
+    .project-actions {
+      display: flex;
+      flex: 0 0 auto;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .live-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: var(--acid);
+      font-family: var(--mono);
+      font-size: 0.66rem;
+    }
+
+    .live-link svg {
+      width: 14px;
+      transition: transform 180ms ease;
+    }
+
+    .live-link:hover svg { transform: translate(3px, -3px); }
+
+    .product-collection-heading {
+      display: flex;
+      margin: 48px 0 28px;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 36px;
+    }
+
+    .product-collection-heading h3 {
+      margin: 0;
+      font-size: clamp(1.9rem, 3.8vw, 3.4rem);
+      line-height: 1;
+      letter-spacing: -0.05em;
+    }
+
+    .product-collection-heading p {
+      max-width: 470px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .product-card {
+      position: relative;
+      min-height: 650px;
+      padding: 34px;
+      overflow: hidden;
+      grid-column: span 6;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: linear-gradient(145deg, rgba(17, 25, 28, 0.94), rgba(7, 12, 14, 0.96));
+      transition: border-color 250ms ease, transform 250ms var(--ease);
+    }
+
+    .product-card:hover {
+      border-color: rgba(94, 234, 212, 0.28);
+      transform: translateY(-4px);
+    }
+
+    .product-card-wide {
+      display: grid;
+      min-height: 500px;
+      grid-column: span 12;
+      grid-template-columns: minmax(320px, 0.72fr) minmax(430px, 1.28fr);
+      gap: 42px;
+      align-items: center;
+    }
+
+    .product-card.crm-product {
+      background:
+        radial-gradient(circle at 82% 15%, rgba(37, 211, 102, 0.09), transparent 22rem),
+        radial-gradient(circle at 10% 100%, rgba(94, 234, 212, 0.08), transparent 22rem),
+        linear-gradient(145deg, rgba(14, 27, 29, 0.97), rgba(7, 12, 14, 0.98));
+    }
+
+    .product-card.dual-app-product {
+      background:
+        radial-gradient(circle at 76% 24%, rgba(94, 234, 212, 0.15), transparent 17rem),
+        linear-gradient(150deg, rgba(12, 25, 28, 0.98), rgba(6, 10, 12, 0.98));
+    }
+
+    .product-card.jebryx-product {
+      background:
+        radial-gradient(circle at 78% 18%, rgba(184, 245, 106, 0.14), transparent 18rem),
+        linear-gradient(150deg, rgba(18, 27, 22, 0.97), rgba(7, 12, 11, 0.98));
+    }
+
+    .product-copy {
+      position: relative;
+      z-index: 4;
+    }
+
+    .product-card:not(.product-card-wide) .product-copy {
+      display: flex;
+      height: 100%;
+      flex-direction: column;
+    }
+
+    .product-status-row {
+      display: flex;
+      margin-bottom: 28px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .product-type {
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 0.61rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .product-status {
+      display: inline-flex;
+      padding: 6px 9px;
+      align-items: center;
+      gap: 6px;
+      color: #9fb2ab;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.025);
+      font-family: var(--mono);
+      font-size: 0.53rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .product-status::before {
+      width: 5px;
+      height: 5px;
+      content: "";
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 8px var(--cyan);
+    }
+
+    .product-status.development {
+      color: var(--acid);
+      border-color: rgba(184, 245, 106, 0.19);
+      background: var(--acid-soft);
+    }
+
+    .product-status.development::before {
+      background: var(--acid);
+      box-shadow: 0 0 8px var(--acid);
+      animation: status-pulse 2.2s ease-out infinite;
+    }
+
+    .product-card h4 {
+      margin: 0 0 14px;
+      font-size: clamp(2rem, 3.8vw, 3.5rem);
+      line-height: 0.98;
+      letter-spacing: -0.06em;
+    }
+
+    .product-card:not(.product-card-wide) h4 {
+      max-width: 390px;
+      font-size: clamp(2rem, 3.2vw, 2.85rem);
+    }
+
+    .product-card .product-description {
+      max-width: 540px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .product-role {
+      display: inline-flex;
+      margin: 20px 0 0;
+      align-items: center;
+      gap: 8px;
+      color: var(--acid);
+      font-family: var(--mono);
+      font-size: 0.65rem;
+    }
+
+    .product-role::before { content: ">"; color: var(--cyan); }
+
+    .product-footer {
+      display: flex;
+      margin-top: 28px;
+      padding-top: 22px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      border-top: 1px solid var(--line);
+    }
+
+    .product-card:not(.product-card-wide) .product-footer {
+      margin-top: auto;
+    }
+
+    .crm-visual {
+      position: relative;
+      z-index: 2;
+      min-height: 390px;
+    }
+
+    .crm-window {
+      position: absolute;
+      inset: 10px 0 0;
+      display: grid;
+      overflow: hidden;
+      grid-template-columns: 62px 1fr;
+      border: 1px solid rgba(225, 255, 244, 0.14);
+      border-radius: 18px;
+      background: #0a1113;
+      box-shadow: 0 28px 80px rgba(0, 0, 0, 0.45);
+      transform: perspective(900px) rotateY(-3deg) rotateX(2deg);
+    }
+
+    .crm-sidebar {
+      display: flex;
+      padding: 15px 0;
+      align-items: center;
+      flex-direction: column;
+      gap: 14px;
+      border-right: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.018);
+    }
+
+    .crm-logo {
+      display: grid;
+      width: 30px;
+      height: 30px;
+      margin-bottom: 8px;
+      place-items: center;
+      color: #06100d;
+      border-radius: 8px;
+      background: var(--cyan);
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      font-weight: 700;
+    }
+
+    .crm-nav-dot {
+      width: 23px;
+      height: 23px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .crm-nav-dot.active {
+      border-color: rgba(94, 234, 212, 0.27);
+      background: var(--cyan-soft);
+    }
+
+    .crm-main {
+      padding: 20px;
+      overflow: hidden;
+    }
+
+    .crm-header {
+      display: flex;
+      margin-bottom: 17px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .crm-title-lines span,
+    .crm-table-line span {
+      display: block;
+      height: 5px;
+      border-radius: 999px;
+      background: #263631;
+    }
+
+    .crm-title-lines span:first-child { width: 85px; margin-bottom: 7px; background: #41564f; }
+    .crm-title-lines span:last-child { width: 125px; }
+
+    .crm-search {
+      width: 110px;
+      height: 24px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .crm-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 9px;
+    }
+
+    .crm-stat {
+      min-height: 62px;
+      padding: 11px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: rgba(255, 255, 255, 0.018);
+    }
+
+    .crm-stat small { color: #5f746c; font-family: var(--mono); font-size: 0.45rem; }
+    .crm-stat strong { display: block; margin-top: 5px; font-family: var(--mono); font-size: 0.8rem; }
+    .crm-stat:first-child strong { color: var(--cyan); }
+    .crm-stat:last-child strong { color: #77e1a0; }
+
+    .crm-content-grid {
+      display: grid;
+      margin-top: 10px;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 9px;
+    }
+
+    .crm-chart,
+    .crm-table {
+      min-height: 150px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: rgba(255, 255, 255, 0.015);
+    }
+
+    .crm-chart-label { color: #667a73; font-family: var(--mono); font-size: 0.45rem; }
+
+    .crm-bars {
+      display: flex;
+      height: 105px;
+      padding-top: 18px;
+      align-items: flex-end;
+      gap: 7px;
+    }
+
+    .crm-bars span {
+      width: 100%;
+      height: var(--bar);
+      border-radius: 3px 3px 0 0;
+      background: linear-gradient(var(--cyan), rgba(94, 234, 212, 0.12));
+      animation: bar-rise 1.4s var(--ease) both;
+      transform-origin: bottom;
+    }
+
+    @keyframes bar-rise { from { transform: scaleY(0); } }
+
+    .crm-table-line {
+      display: grid;
+      padding: 10px 0;
+      grid-template-columns: 18px 1fr 25px;
+      gap: 7px;
+      align-items: center;
+      border-bottom: 1px solid rgba(225, 255, 244, 0.06);
+    }
+
+    .crm-table-line::before {
+      width: 16px;
+      height: 16px;
+      content: "";
+      border-radius: 50%;
+      background: #1c312b;
+    }
+
+    .crm-table-line span:last-child { width: 25px; background: rgba(37, 211, 102, 0.35); }
+
+    .whatsapp-chip,
+    .socket-chip {
+      position: absolute;
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid rgba(37, 211, 102, 0.25);
+      background: rgba(7, 18, 13, 0.93);
+      box-shadow: 0 14px 38px rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(12px);
+      font-family: var(--mono);
+      font-size: 0.54rem;
+    }
+
+    .whatsapp-chip {
+      right: -12px;
+      bottom: 8px;
+      padding: 11px 13px;
+      color: #77e1a0;
+      border-radius: 12px;
+    }
+
+    .whatsapp-chip::before {
+      display: grid;
+      width: 24px;
+      height: 24px;
+      place-items: center;
+      content: "WA";
+      color: #07110c;
+      border-radius: 50%;
+      background: #25d366;
+      font-size: 0.48rem;
+      font-weight: 700;
+    }
+
+    .socket-chip {
+      top: -4px;
+      left: 22px;
+      padding: 7px 10px;
+      color: var(--cyan);
+      border-color: rgba(94, 234, 212, 0.22);
+      border-radius: 999px;
+    }
+
+    .socket-chip::before {
+      width: 5px;
+      height: 5px;
+      content: "";
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 8px var(--cyan);
+    }
+
+    .product-visual-stage {
+      position: absolute;
+      inset: 190px 0 100px;
+      display: grid;
+      place-items: center;
+      pointer-events: auto;
+    }
+
+    .phone-shell {
+      position: relative;
+      width: 184px;
+      height: 356px;
+      padding: 7px;
+      border: 1px solid rgba(225, 255, 244, 0.2);
+      border-radius: 31px;
+      background: #050809;
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.52), 0 0 55px rgba(94, 234, 212, 0.08);
+      transform: rotate(3deg);
+    }
+
+    .phone-screen {
+      position: relative;
+      height: 100%;
+      overflow: hidden;
+      border-radius: 23px;
+      background: #101827;
+      touch-action: pan-y;
+    }
+
+    .phone-notch {
+      position: absolute;
+      z-index: 2;
+      top: 14px;
+      left: 50%;
+      width: 58px;
+      height: 13px;
+      border-radius: 999px;
+      background: #050809;
+      transform: translateX(-50%);
+    }
+
+    .phone-slide {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      object-fit: cover;
+      transform: scale(1.025);
+      transition: opacity 520ms var(--ease), transform 700ms var(--ease);
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+
+    .phone-slide.active {
+      z-index: 2;
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .phone-dots {
+      position: absolute;
+      z-index: 7;
+      right: 0;
+      bottom: 11px;
+      left: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .phone-dot {
+      width: 6px;
+      height: 6px;
+      padding: 0;
+      border: 0;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.48);
+      box-shadow: 0 1px 8px rgba(0, 0, 0, 0.45);
+      cursor: pointer;
+      transition: width 220ms var(--ease), background 220ms ease;
+    }
+
+    .phone-dot.active {
+      width: 20px;
+      background: #fff;
+    }
+
+    .phone-nav {
+      position: absolute;
+      z-index: 8;
+      top: 50%;
+      display: grid;
+      width: 31px;
+      height: 31px;
+      padding: 0;
+      place-items: center;
+      color: var(--cyan);
+      border: 1px solid rgba(94, 234, 212, 0.22);
+      border-radius: 50%;
+      background: rgba(5, 12, 14, 0.86);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.3);
+      cursor: pointer;
+      backdrop-filter: blur(9px);
+      transform: translateY(-50%);
+      transition: color 180ms ease, border-color 180ms ease, background 180ms ease, scale 180ms ease;
+    }
+
+    .phone-nav:hover {
+      color: var(--acid);
+      border-color: rgba(184, 245, 106, 0.35);
+      background: rgba(12, 20, 14, 0.94);
+      scale: 1.08;
+    }
+
+    .phone-nav svg { width: 14px; height: 14px; }
+    .phone-nav.previous { left: calc(50% - 132px); }
+    .phone-nav.next { right: calc(50% - 132px); }
+
+    .jebryx-phone-stage .phone-shell {
+      border-color: rgba(184, 245, 106, 0.24);
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.52), 0 0 58px rgba(184, 245, 106, 0.1);
+      transform: rotate(-3deg);
+    }
+
+    .jebryx-phone-stage .phone-nav {
+      color: var(--acid);
+      border-color: rgba(184, 245, 106, 0.25);
+      background: rgba(9, 17, 11, 0.9);
+    }
+
+    .jebryx-phone-stage .phone-dot.active { background: var(--acid); }
+
+    .phone-greeting { color: #728981; font-size: 0.47rem; }
+    .phone-greeting strong { display: block; margin-top: 3px; color: var(--text); font-size: 0.75rem; }
+
+    .phone-balance {
+      margin: 16px 0 12px;
+      padding: 13px;
+      border: 1px solid rgba(94, 234, 212, 0.16);
+      border-radius: 12px;
+      background: rgba(94, 234, 212, 0.075);
+    }
+
+    .phone-balance small { color: #7f9890; font-size: 0.43rem; }
+    .phone-balance strong { display: block; margin-top: 4px; color: var(--cyan); font-family: var(--mono); font-size: 0.68rem; }
+
+    .phone-services {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 7px;
+    }
+
+    .phone-service {
+      display: grid;
+      min-height: 54px;
+      padding: 8px;
+      align-content: space-between;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: rgba(255, 255, 255, 0.02);
+      color: #81978f;
+      font-family: var(--mono);
+      font-size: 0.4rem;
+    }
+
+    .phone-service::before {
+      width: 16px;
+      height: 16px;
+      content: "";
+      border-radius: 5px;
+      background: var(--cyan-soft);
+      box-shadow: inset 0 0 0 1px rgba(94, 234, 212, 0.15);
+    }
+
+    .push-notification {
+      position: absolute;
+      z-index: 4;
+      right: 10px;
+      top: 235px;
+      width: 188px;
+      padding: 12px;
+      border: 1px solid rgba(94, 234, 212, 0.24);
+      border-radius: 13px;
+      background: rgba(8, 17, 19, 0.94);
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(12px);
+      animation: float 4.6s ease-in-out infinite;
+    }
+
+    .push-notification small { color: var(--cyan); font-family: var(--mono); font-size: 0.48rem; }
+    .push-notification strong { display: block; margin-top: 4px; font-size: 0.66rem; }
+
+    .platform-row {
+      position: absolute;
+      bottom: 104px;
+      left: 24px;
+      display: flex;
+      gap: 7px;
+    }
+
+    .platform-row span {
+      padding: 6px 8px;
+      color: #8da29a;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: rgba(5, 9, 10, 0.75);
+      font-family: var(--mono);
+      font-size: 0.5rem;
+    }
+
+    .founder-badge {
+      position: absolute;
+      z-index: 5;
+      top: 224px;
+      right: 24px;
+      display: grid;
+      width: 74px;
+      height: 74px;
+      place-items: center;
+      color: var(--acid);
+      border: 1px solid rgba(184, 245, 106, 0.3);
+      border-radius: 50%;
+      background: rgba(12, 20, 14, 0.82);
+      font-family: var(--mono);
+      font-size: 0.48rem;
+      line-height: 1.25;
+      text-align: center;
+      text-transform: uppercase;
+      transform: rotate(8deg);
+      box-shadow: 0 0 45px rgba(184, 245, 106, 0.08);
+      pointer-events: none;
+    }
+
+    .jebryx-product .founder-badge {
+      top: 238px;
+      right: 26px;
+    }
+
+    .project-number {
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 0.66rem;
+    }
+
+    .project-graphic {
+      position: absolute;
+      top: 26px;
+      right: 26px;
+      width: 140px;
+      height: 140px;
+      opacity: 0.78;
+    }
+
+    .map-orbit {
+      position: absolute;
+      inset: 18px;
+      border: 1px solid rgba(94, 234, 212, 0.25);
+      border-radius: 50%;
+      animation: orbit-spin 18s linear infinite;
+    }
+
+    .map-orbit::before,
+    .map-orbit::after {
+      position: absolute;
+      content: "";
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 18px var(--cyan);
+    }
+
+    .map-orbit::before { top: 7px; left: 18px; width: 7px; height: 7px; }
+    .map-orbit::after { right: -4px; bottom: 44px; width: 5px; height: 5px; }
+
+    .map-orbit-inner {
+      position: absolute;
+      inset: 45px;
+      border: 1px dashed rgba(184, 245, 106, 0.3);
+      border-radius: 50%;
+      animation: orbit-spin 11s linear reverse infinite;
+    }
+
+    .map-orbit-inner::after {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 9px;
+      height: 9px;
+      content: "";
+      border-radius: 50%;
+      background: var(--acid);
+      box-shadow: 0 0 24px var(--acid);
+      transform: translate(-50%, -50%);
+    }
+
+    @keyframes orbit-spin { to { transform: rotate(360deg); } }
+
+    .catalog-graphic {
+      display: grid;
+      padding: 19px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 7px;
+      transform: rotate(4deg);
+    }
+
+    .catalog-graphic span {
+      border: 1px solid rgba(255, 138, 91, 0.2);
+      border-radius: 5px;
+      background: rgba(255, 138, 91, 0.07);
+      animation: catalog-pulse 3s ease-in-out infinite;
+    }
+
+    .catalog-graphic span:nth-child(2n) { animation-delay: -1s; }
+    .catalog-graphic span:nth-child(3n) { animation-delay: -2s; }
+
+    @keyframes catalog-pulse {
+      50% { border-color: rgba(94, 234, 212, 0.35); background: rgba(94, 234, 212, 0.08); }
+    }
+
+    .project-content {
+      position: relative;
+      z-index: 2;
+      margin-top: auto;
+    }
+
+    .project-card h3 {
+      max-width: 480px;
+      margin: 0 0 12px;
+      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      line-height: 1;
+      letter-spacing: -0.05em;
+    }
+
+    .project-card p {
+      max-width: 520px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .project-bottom {
+      display: flex;
+      margin-top: 26px;
+      padding-top: 20px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      border-top: 1px solid var(--line);
+    }
+
+    .project-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .case-trigger {
+      display: inline-flex;
+      flex: 0 0 auto;
+      padding: 0;
+      align-items: center;
+      gap: 8px;
+      color: var(--cyan);
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      font-family: var(--mono);
+      font-size: 0.66rem;
+    }
+
+    .case-trigger svg {
+      width: 15px;
+      transition: transform 180ms ease;
+    }
+
+    .case-trigger:hover svg { transform: translate(3px, -3px); }
+
+    .stack-console {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: rgba(7, 12, 14, 0.8);
+      box-shadow: 0 30px 90px rgba(0, 0, 0, 0.3);
+    }
+
+    .stack-toolbar {
+      display: flex;
+      padding: 16px 18px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .console-path {
+      color: #62766f;
+      font-family: var(--mono);
+      font-size: 0.64rem;
+    }
+
+    .skill-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .skill-filter {
+      padding: 7px 11px;
+      color: var(--muted);
+      border: 1px solid transparent;
+      border-radius: 7px;
+      background: transparent;
+      cursor: pointer;
+      font-family: var(--mono);
+      font-size: 0.63rem;
+      transition: color 180ms ease, border-color 180ms ease, background 180ms ease;
+    }
+
+    .skill-filter:hover,
+    .skill-filter.active {
+      color: var(--cyan);
+      border-color: rgba(94, 234, 212, 0.18);
+      background: var(--cyan-soft);
+    }
+
+    .skills-grid {
+      display: grid;
+      padding: 34px;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .skill-item {
+      position: relative;
+      display: flex;
+      min-height: 74px;
+      padding: 14px;
+      align-items: center;
+      gap: 12px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: rgba(255, 255, 255, 0.018);
+      transition: opacity 220ms ease, transform 220ms var(--ease), border-color 220ms ease, background 220ms ease;
+    }
+
+    .skill-item:hover {
+      border-color: rgba(94, 234, 212, 0.3);
+      background: var(--cyan-soft);
+      transform: translateY(-3px);
+    }
+
+    .skill-item.is-hidden {
+      display: none;
+    }
+
+    .skill-glyph {
+      display: grid;
+      width: 38px;
+      height: 38px;
+      flex: 0 0 auto;
+      place-items: center;
+      color: var(--cyan);
+      border-radius: 9px;
+      background: rgba(94, 234, 212, 0.075);
+      font-family: var(--mono);
+      font-size: 0.66rem;
+      font-weight: 600;
+    }
+
+    .skill-name {
+      font-size: 0.83rem;
+      font-weight: 500;
+    }
+
+    .skill-category {
+      display: block;
+      margin-top: 2px;
+      color: #637770;
+      font-family: var(--mono);
+      font-size: 0.54rem;
+      text-transform: uppercase;
+    }
+
+    .soft-skills {
+      display: flex;
+      margin-top: 18px;
+      padding: 18px 24px;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 9px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.016);
+    }
+
+    .soft-skills-label {
+      margin-right: 6px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      text-transform: uppercase;
+    }
+
+    .soft-skill {
+      padding: 6px 9px;
+      color: #a7b9b2;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      font-size: 0.72rem;
+    }
+
+    .education-strip {
+      display: grid;
+      margin-top: 18px;
+      padding: 28px 34px;
+      grid-template-columns: auto 1fr auto;
+      gap: 24px;
+      align-items: center;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.016);
+    }
+
+    .education-logo {
+      display: grid;
+      width: 52px;
+      height: 52px;
+      place-items: center;
+      color: var(--acid);
+      border: 1px solid rgba(184, 245, 106, 0.2);
+      border-radius: 14px;
+      background: var(--acid-soft);
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .education-strip h3 {
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    .education-strip p {
+      margin: 3px 0 0;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .education-date {
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 0.7rem;
+    }
+
+    .contact-section {
+      padding-bottom: 34px;
+    }
+
+    .contact-panel {
+      position: relative;
+      padding: clamp(36px, 7vw, 82px);
+      overflow: hidden;
+      border: 1px solid rgba(94, 234, 212, 0.22);
+      border-radius: 34px;
+      background:
+        radial-gradient(circle at 85% 20%, rgba(184, 245, 106, 0.13), transparent 18rem),
+        radial-gradient(circle at 5% 100%, rgba(94, 234, 212, 0.1), transparent 20rem),
+        linear-gradient(145deg, rgba(14, 27, 29, 0.96), rgba(7, 12, 14, 0.96));
+      box-shadow: 0 30px 100px rgba(0, 0, 0, 0.38);
+    }
+
+    .contact-panel::after {
+      position: absolute;
+      right: -80px;
+      bottom: -140px;
+      width: 390px;
+      height: 390px;
+      content: "BC";
+      color: rgba(255, 255, 255, 0.018);
+      font-size: 17rem;
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: -0.12em;
+      pointer-events: none;
+    }
+
+    .contact-panel h2 {
+      max-width: 870px;
+      margin: 0;
+      font-size: clamp(3rem, 7vw, 7rem);
+      line-height: 0.92;
+      letter-spacing: -0.075em;
+    }
+
+    .contact-panel h2 span {
+      color: transparent;
+      -webkit-text-stroke: 1px var(--cyan);
+    }
+
+    .contact-panel > p {
+      max-width: 620px;
+      margin: 30px 0;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .contact-links {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 11px;
+    }
+
+    .contact-details {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      margin-top: 36px;
+      padding-top: 24px;
+      color: #6f827c;
+      border-top: 1px solid var(--line);
+      font-family: var(--mono);
+      font-size: 0.66rem;
+    }
+
+    .contact-details a:hover { color: var(--cyan); }
+
+    footer {
+      padding: 24px 0 34px;
+      color: #5d706a;
+      font-family: var(--mono);
+      font-size: 0.62rem;
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .footer-signature { color: #81958e; }
+    .footer-signature span { color: var(--cyan); }
+
+    .case-dialog {
+      width: min(680px, calc(100% - 32px));
+      max-height: min(780px, calc(100vh - 32px));
+      padding: 0;
+      overflow: hidden auto;
+      color: var(--text);
+      border: 1px solid rgba(94, 234, 212, 0.25);
+      border-radius: 24px;
+      background: #0b1214;
+      box-shadow: 0 40px 130px rgba(0, 0, 0, 0.75);
+    }
+
+    .case-dialog::backdrop {
+      background: rgba(1, 4, 5, 0.78);
+      backdrop-filter: blur(10px);
+    }
+
+    .dialog-inner { padding: clamp(28px, 5vw, 48px); }
+
+    .dialog-close {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      display: grid;
+      width: 38px;
+      height: 38px;
+      place-items: center;
+      color: var(--muted);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.025);
+      cursor: pointer;
+      font-family: var(--mono);
+    }
+
+    .dialog-close:hover { color: var(--cyan); border-color: var(--line-bright); }
+    .dialog-kicker { color: var(--cyan); font-family: var(--mono); font-size: 0.67rem; text-transform: uppercase; }
+    .case-dialog h3 { margin: 16px 48px 12px 0; font-size: clamp(2rem, 5vw, 3.4rem); line-height: 1; letter-spacing: -0.055em; }
+    .dialog-summary { color: var(--muted); }
+    .dialog-section { margin-top: 30px; padding-top: 24px; border-top: 1px solid var(--line); }
+    .dialog-section h4 { margin: 0 0 12px; color: var(--acid); font-family: var(--mono); font-size: 0.69rem; font-weight: 500; text-transform: uppercase; }
+    .dialog-section ul { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+    .dialog-section li { position: relative; padding-left: 18px; color: #a7b8b2; font-size: 0.88rem; }
+    .dialog-section li::before { position: absolute; top: 0.72em; left: 0; width: 6px; height: 1px; content: ""; background: var(--cyan); }
+    .dialog-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 26px; }
+
+    :focus-visible {
+      outline: 2px solid var(--acid);
+      outline-offset: 4px;
+    }
+
+    .js .reveal {
+      opacity: 0;
+      transform: translateY(34px);
+      transition: opacity 800ms var(--ease), transform 800ms var(--ease);
+    }
+
+    .js .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .js .stagger > * {
+      transition-delay: calc(var(--i, 0) * 75ms);
+    }
+
+    @media (max-width: 980px) {
+      :root { --page: min(100% - 36px, 820px); }
+      .nav-links {
+        position: fixed;
+        inset: 76px 0 auto;
+        display: grid;
+        padding: 28px 18px 34px;
+        gap: 6px;
+        border-bottom: 1px solid var(--line);
+        background: rgba(4, 8, 9, 0.96);
+        backdrop-filter: blur(20px);
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(-16px);
+        transition: opacity 220ms ease, transform 220ms var(--ease);
+      }
+      .nav-links.open { opacity: 1; pointer-events: auto; transform: translateY(0); }
+      .nav-link { display: block; padding: 13px 10px; font-size: 0.78rem; }
+      .nav-link::after { display: none; }
+      .menu-toggle { display: inline-grid; }
+      .hero { min-height: auto; padding-top: 140px; }
+      .hero-grid { grid-template-columns: 1fr; }
+      .hero-copy { max-width: 720px; }
+      .hero-visual { width: min(540px, 92%); margin: 10px auto 0; }
+      .scroll-cue { display: none; }
+      .section-heading { grid-template-columns: 1fr; gap: 20px; }
+      .section-heading p { max-width: 640px; }
+      .bento-main { grid-column: span 12; }
+      .bento-small { grid-column: span 6; }
+      .bento-small:last-child { grid-column: span 12; }
+      .skills-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    @media (max-width: 700px) {
+      :root { --page: calc(100% - 28px); --radius-lg: 22px; }
+      .nav { min-height: 68px; }
+      .nav-links { inset: 68px 0 auto; }
+      .brand-name { display: none; }
+      .hero { padding: 118px 0 70px; }
+      .hero::before { top: 24%; width: 110vw; height: 90vw; }
+      .hero h1 { font-size: clamp(3.65rem, 20vw, 6.7rem); }
+      .role-line { min-height: 58px; align-items: flex-start; }
+      .terminal-card { min-height: 370px; transform: none; }
+      .terminal-body { padding: 24px 18px; }
+      .section { padding: 52px 0; }
+      .section-heading { margin-bottom: 42px; }
+      .bento-card { padding: 22px; }
+      .bento-main,
+      .bento-small,
+      .bento-small:last-child { min-height: 0; grid-column: span 12; }
+      .bento-main blockquote { margin: 42px 0; }
+      .experience-list::before { left: 5px; }
+      .experience-item { grid-template-columns: 1fr; gap: 12px; padding-left: 26px; padding-bottom: 52px; }
+      .experience-date { padding: 0; text-align: left; }
+      .experience-dot { top: 5px; left: 0; }
+      .experience-card { padding: 22px; }
+      .experience-points { grid-template-columns: 1fr; }
+      .project-grid { grid-template-columns: 1fr; margin-top: 56px; }
+      .project-card { min-height: 430px; padding: 24px; transform: none !important; }
+      .live-project-card { min-height: 0; padding: 0; }
+      .live-project-content { padding: 24px; }
+      .live-frame { height: 290px; }
+      .product-collection-heading { align-items: flex-start; flex-direction: column; }
+      .product-card,
+      .product-card-wide { grid-column: span 12; }
+      .product-card-wide { grid-template-columns: 1fr; }
+      .crm-visual { min-height: 370px; }
+      .project-bottom { align-items: flex-end; }
+      .stack-toolbar { align-items: flex-start; flex-direction: column; }
+      .skills-grid { padding: 20px; grid-template-columns: repeat(2, 1fr); }
+      .skill-item { min-height: 66px; padding: 10px; }
+      .skill-glyph { width: 32px; height: 32px; }
+      .education-strip { padding: 22px; grid-template-columns: auto 1fr; }
+      .education-date { grid-column: 2; }
+      .contact-section { padding-bottom: 24px; }
+      .contact-panel { border-radius: 24px; }
+      .footer-inner { align-items: flex-start; flex-direction: column; }
+    }
+
+    @media (max-width: 430px) {
+      .hero-actions .button { width: 100%; }
+      .hero-meta { flex-direction: column; }
+      .hero-visual { width: 100%; }
+      .terminal-body { font-size: 0.61rem; }
+      .project-bottom { align-items: flex-start; flex-direction: column; }
+      .project-actions { width: 100%; justify-content: space-between; }
+      .preview-toggle { display: none; }
+      .live-frame { height: 235px; }
+      .product-collection-heading { margin-top: 36px; }
+      .product-card { min-height: 640px; padding: 24px; }
+      .product-card-wide { min-height: 0; gap: 28px; }
+      .crm-visual { min-height: 330px; }
+      .crm-window { grid-template-columns: 44px 1fr; transform: none; }
+      .crm-sidebar { gap: 10px; }
+      .crm-search { width: 70px; }
+      .crm-main { padding: 14px; }
+      .crm-content-grid { grid-template-columns: 1fr; }
+      .crm-table { display: none; }
+      .whatsapp-chip { right: -7px; }
+      .product-footer { align-items: flex-start; flex-direction: column; }
+      .product-visual-stage { inset: 190px 0 100px; }
+      .skills-grid { grid-template-columns: 1fr; }
+      .skill-item { min-height: 60px; }
+      .contact-links .button { width: 100%; }
+    }
+
+    @media (hover: none) {
+      .cursor-glow { display: none; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+      .js .reveal { opacity: 1; transform: none; }
+      .tech-track { transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main" data-es="Saltar al contenido" data-en="Skip to content">Saltar al contenido</a>
+  <div class="scroll-progress" aria-hidden="true"></div>
+  <canvas id="network-canvas" aria-hidden="true"></canvas>
+  <div class="noise" aria-hidden="true"></div>
+  <div class="cursor-glow" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <nav class="nav page-shell" aria-label="Navegación principal" data-aria-es="Navegación principal" data-aria-en="Main navigation">
+      <a class="brand" href="#inicio" aria-label="Bryan Castro, inicio" data-aria-es="Bryan Castro, inicio" data-aria-en="Bryan Castro, home">
+        <span class="brand-mark">BC</span>
+        <span class="brand-name">Bryan<span>.</span>dev</span>
+      </a>
+
+      <ul class="nav-links" id="nav-links">
+        <li><a class="nav-link active" href="#inicio" data-es="01 / Inicio" data-en="01 / Home">01 / Inicio</a></li>
+        <li><a class="nav-link" href="#sobre-mi" data-es="02 / Perfil" data-en="02 / Profile">02 / Perfil</a></li>
+        <li><a class="nav-link" href="#experiencia" data-es="03 / Experiencia" data-en="03 / Experience">03 / Experiencia</a></li>
+        <li><a class="nav-link" href="#stack" data-es="04 / Tecnologías" data-en="04 / Stack">04 / Tecnologías</a></li>
+        <li><a class="nav-link" href="#contacto" data-es="05 / Contacto" data-en="05 / Contact">05 / Contacto</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <button class="language-switch" type="button" aria-label="Cambiar idioma a inglés" data-aria-es="Cambiar idioma a inglés" data-aria-en="Switch language to Spanish">EN</button>
+        <button class="menu-toggle" type="button" aria-label="Abrir menú" aria-controls="nav-links" aria-expanded="false" data-aria-es="Abrir menú" data-aria-en="Open menu">
+          <span></span><span></span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="hero" id="inicio" data-section>
+      <div class="hero-grid page-shell">
+        <div class="hero-copy-wrap reveal visible">
+          <div class="eyebrow"><span class="status-dot"></span><span data-es="Costa Rica · UTC−6 · Construyendo con propósito" data-en="Costa Rica · UTC−6 · Building with purpose">Costa Rica · UTC−6 · Construyendo con propósito</span></div>
+          <p class="hero-kicker" data-es="Hola, soy" data-en="Hello, I'm">Hola, soy</p>
+          <h1>Bryan <span class="outline">Castro.</span></h1>
+          <div class="role-line"><span class="typed-role">Desarrollador de software web y móvil</span></div>
+          <p class="hero-copy" data-es="Ingeniero en Computación apasionado por crear software confiable y útil que mejore la vida de las personas. Tengo bases sólidas en estructuras de datos, algoritmos y programación orientada a objetos, y disfruto resolver problemas mediante el trabajo colaborativo. Contribuyo como desarrollador de software integral en productos web y móviles del mundo real, colaborando con las partes interesadas para diseñar, construir y entregar funcionalidades durante todo el ciclo de desarrollo. Busco constantemente aprender nuevas tecnologías, optimizar el rendimiento y contribuir a una innovación significativa con integridad e impacto." data-en="Computer Engineer passionate about building reliable, useful software that improves people’s lives. I have strong foundations in data structures, algorithms, and object-oriented programming, and I enjoy solving problems through collaborative teamwork. I contribute as a Full Stack Developer on real-world web and mobile products, partnering with stakeholders to design, build, and ship features through the full development cycle. I constantly seek to learn new technologies, optimize performance, and contribute to meaningful innovation with integrity and impact.">Ingeniero en Computación apasionado por crear software confiable y útil que mejore la vida de las personas. Tengo bases sólidas en estructuras de datos, algoritmos y programación orientada a objetos, y disfruto resolver problemas mediante el trabajo colaborativo. Contribuyo como desarrollador de software integral en productos web y móviles del mundo real, colaborando con las partes interesadas para diseñar, construir y entregar funcionalidades durante todo el ciclo de desarrollo. Busco constantemente aprender nuevas tecnologías, optimizar el rendimiento y contribuir a una innovación significativa con integridad e impacto.</p>
+
+          <div class="hero-actions">
+            <a class="button button-primary" href="#experiencia">
+              <span data-es="Explorar mi trabajo" data-en="Explore my work">Explorar mi trabajo</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 19 19 5M9 5h10v10"/></svg>
+            </a>
+            <a class="button button-secondary" href="CV_Bryan_Castro_Solís_es.pdf" download="CV_Bryan_Castro_Solís_es.pdf" data-cv-es="CV_Bryan_Castro_Solís_es.pdf" data-cv-en="CV_Bryan_Castro_Solís_en.pdf">
+              <span data-es="Descargar CV" data-en="Download résumé">Descargar CV</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 21h16"/></svg>
+            </a>
+          </div>
+
+          <div class="hero-meta">
+            <span data-es="Web + Móvil + APIs" data-en="Web + Mobile + APIs">Web + Móvil + APIs</span>
+            <span data-es="IA aplicada" data-en="Applied AI">IA aplicada</span>
+            <span data-es="Español · Inglés · Portugués" data-en="Spanish · English · Portuguese">Español · Inglés · Portugués</span>
+          </div>
+        </div>
+
+        <div class="hero-visual reveal">
+          <div class="terminal-card">
+            <div class="terminal-bar">
+              <div class="terminal-dots"><span></span><span></span><span></span></div>
+              <span data-es="bryan.perfil.ts" data-en="bryan.profile.ts">bryan.perfil.ts</span>
+              <span>UTF-8</span>
+            </div>
+            <div class="terminal-body" aria-label="Perfil de Bryan en formato de código" data-aria-es="Perfil de Bryan en formato de código" data-aria-en="Bryan's profile in code format">
+              <div class="code-line"><span class="line-number">01</span><span><span class="code-key">const</span> <span class="code-var" data-es="desarrollador" data-en="developer">desarrollador</span> = {</span></div>
+              <div class="code-line"><span class="line-number">02</span><span>&nbsp;&nbsp;<span data-es="nombre" data-en="name">nombre</span>: <span class="code-string">"Bryan Castro"</span>,</span></div>
+              <div class="code-line"><span class="line-number">03</span><span>&nbsp;&nbsp;<span data-es="rol" data-en="role">rol</span>: <span class="code-string" data-es="&quot;Desarrollador FullStack&quot;" data-en="&quot;FullStack Developer&quot;">"Desarrollador FullStack"</span>,</span></div>
+              <div class="code-line"><span class="line-number">04</span><span>&nbsp;&nbsp;<span data-es="enfoque" data-en="focus">enfoque</span>: [<span class="code-string">"web"</span>, <span class="code-string" data-es="&quot;móvil&quot;" data-en="&quot;mobile&quot;">"móvil"</span>, <span class="code-string" data-es="&quot;IA&quot;" data-en="&quot;AI&quot;">"IA"</span>],</span></div>
+              <div class="code-line"><span class="line-number">05</span><span>&nbsp;&nbsp;<span data-es="valores" data-en="values">valores</span>: [</span></div>
+              <div class="code-line"><span class="line-number">06</span><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-string" data-es="&quot;impacto&quot;" data-en="&quot;impact&quot;">"impacto"</span>, <span class="code-string" data-es="&quot;integridad&quot;" data-en="&quot;integrity&quot;">"integridad"</span>,</span></div>
+              <div class="code-line"><span class="line-number">07</span><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-string" data-es="&quot;aprendizajeContinuo&quot;" data-en="&quot;continuousLearning&quot;">"aprendizajeContinuo"</span></span></div>
+              <div class="code-line"><span class="line-number">08</span><span>&nbsp;&nbsp;],</span></div>
+              <div class="code-line"><span class="line-number">09</span><span>&nbsp;&nbsp;<span data-es="estado" data-en="status">estado</span>: <span class="code-string" data-es="&quot;construyendo&quot;" data-en="&quot;building&quot;">"construyendo"</span></span></div>
+              <div class="code-line"><span class="line-number">10</span><span>};</span></div>
+              <div class="terminal-result"><span class="code-muted" data-es="// resultado:" data-en="// output:">// resultado:</span> <span data-es="ideas → software confiable ✓" data-en="ideas → reliable software ✓">ideas → software confiable ✓</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <span class="scroll-cue" data-es="Descubrir" data-en="Discover">Descubrir</span>
+    </section>
+
+    <div class="tech-rail" aria-label="Tecnologías principales" data-aria-es="Tecnologías principales" data-aria-en="Main technologies">
+      <div class="tech-track">
+        <div class="tech-group"><span>TypeScript</span><span>React</span><span>Node.js</span><span>React Native</span><span>Python</span><span>SQL</span><span>Angular</span><span>MongoDB</span><span>Scrum</span></div>
+        <div class="tech-group" aria-hidden="true"><span>TypeScript</span><span>React</span><span>Node.js</span><span>React Native</span><span>Python</span><span>SQL</span><span>Angular</span><span>MongoDB</span><span>Scrum</span></div>
+      </div>
+    </div>
+
+    <section class="section" id="sobre-mi" data-section>
+      <div class="page-shell">
+        <div class="section-label reveal"><span data-es="02 / Perfil" data-en="02 / Profile">02 / Perfil</span></div>
+        <div class="section-heading reveal">
+          <h2 data-es="Código que funciona. <em>Criterio que suma.</em>" data-en="Code that works. <em>Judgment that adds value.</em>">Código que funciona. <em>Criterio que suma.</em></h2>
+          <p data-es="Me involucro en el ciclo completo: entender el problema, diseñar una solución mantenible, construirla con el equipo y acompañarla después de la entrega." data-en="I get involved throughout the full cycle: understanding the problem, designing a maintainable solution, building it with the team, and supporting it after delivery.">Me involucro en el ciclo completo: entender el problema, diseñar una solución mantenible, construirla con el equipo y acompañarla después de la entrega.</p>
+        </div>
+
+        <div class="bento-grid stagger">
+          <article class="bento-card bento-main reveal" style="--i: 0">
+            <span class="card-index" data-es="PERFIL.MENTALIDAD" data-en="ABOUT.MINDSET">PERFIL.MENTALIDAD</span>
+            <blockquote data-es="No se trata de usar más tecnología. Se trata de elegir la correcta para crear algo <span>útil, claro y sostenible.</span>" data-en="It is not about using more technology. It is about choosing the right technology to build something <span>useful, clear, and sustainable.</span>">No se trata de usar más tecnología. Se trata de elegir la correcta para crear algo <span>útil, claro y sostenible.</span></blockquote>
+            <div class="bento-footer"><span data-es="Pensamiento crítico + ejecución" data-en="Critical thinking + execution">Pensamiento crítico + ejecución</span><span>CR / 2026</span></div>
+          </article>
+
+          <article class="bento-card bento-small reveal" style="--i: 1">
+            <span class="card-index" data-es="CAPACIDAD.01" data-en="CAPABILITY.01">CAPACIDAD.01</span>
+            <div class="bento-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 5h16v11H4zM8 20h8m-4-4v4M8 9l2 2-2 2m4 0h4"/></svg></div>
+            <h3 data-es="Visión integral" data-en="Full Stack perspective">Visión integral</h3>
+            <p data-es="Web, aplicaciones móviles, APIs y bases de datos conectadas como un solo producto, no como piezas aisladas." data-en="Web, mobile, APIs, and databases connected as one product, not isolated pieces.">Web, aplicaciones móviles, APIs y bases de datos conectadas como un solo producto, no como piezas aisladas.</p>
+          </article>
+
+          <article class="bento-card bento-small reveal" style="--i: 2">
+            <span class="card-index" data-es="CAPACIDAD.02" data-en="CAPABILITY.02">CAPACIDAD.02</span>
+            <div class="bento-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M12 3v3m0 12v3M3 12h3m12 0h3M5.6 5.6l2.1 2.1m8.6 8.6 2.1 2.1m0-12.8-2.1 2.1m-8.6 8.6-2.1 2.1M9 12a3 3 0 1 0 6 0 3 3 0 0 0-6 0Z"/></svg></div>
+            <h3 data-es="IA con intención" data-en="Purposeful AI">IA con intención</h3>
+            <p data-es="Implementación de soluciones de IA para optimizar procesos internos y apoyar mejores decisiones." data-en="AI solutions implemented to optimize internal processes and support better decisions.">Implementación de soluciones de IA para optimizar procesos internos y apoyar mejores decisiones.</p>
+          </article>
+
+          <article class="bento-card bento-small reveal" style="--i: 3">
+            <span class="card-index" data-es="COMUNICACIÓN.03" data-en="COMMUNICATION.03">COMUNICACIÓN.03</span>
+            <div class="bento-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 5h16v11H8l-4 4V5Z"/><path d="M8 9h8M8 12h5"/></svg></div>
+            <h3 data-es="Comunicación sin fronteras" data-en="Communication without borders">Comunicación sin fronteras</h3>
+            <div class="language-list"><span data-es="Español / Nativo" data-en="Spanish / Native">Español / Nativo</span><span data-es="Inglés / B2" data-en="English / B2">Inglés / B2</span><span data-es="Portugués / B1" data-en="Portuguese / B1">Portugués / B1</span></div>
+          </article>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="section" id="experiencia" data-section>
+      <div class="page-shell">
+        <div class="section-label reveal"><span data-es="03 / Experiencia" data-en="03 / Experience">03 / Experiencia</span></div>
+        <div class="section-heading reveal">
+          <h2 data-es="De retos reales a <em>software en acción.</em>" data-en="From real challenges to <em>software in action.</em>">De retos reales a <em>software en acción.</em></h2>
+          <p data-es="Experiencia colaborando con clientes, partes interesadas y equipos para llevar ideas desde la definición hasta la entrega." data-en="Experience collaborating with clients, stakeholders, and teams to take ideas from definition to delivery.">Experiencia colaborando con clientes, partes interesadas y equipos para llevar ideas desde la definición hasta la entrega.</p>
+        </div>
+
+        <div class="experience-list">
+          <article class="experience-item reveal">
+            <time class="experience-date" datetime="2025-02" data-es="FEB 2025 — HOY" data-en="FEB 2025 — PRESENT">FEB 2025 — HOY</time>
+            <span class="experience-dot" aria-hidden="true"></span>
+            <div class="experience-card">
+              <div class="experience-topline">
+                <div><h3 data-es="Desarrollador de software" data-en="Full Stack Developer">Desarrollador de software</h3><span class="company">Dual Servicios</span></div>
+                <span class="current-badge" data-es="Actual" data-en="Current">Actual</span>
+              </div>
+              <p data-es="Liderazgo técnico y ejecución durante el ciclo completo de productos web y móviles, APIs y soluciones de datos, manteniendo comunicación directa con clientes y partes interesadas." data-en="Technical leadership and execution across the full lifecycle of web and mobile products, APIs, and data solutions, while maintaining direct communication with clients and stakeholders.">Liderazgo técnico y ejecución durante el ciclo completo de productos web y móviles, APIs y soluciones de datos, manteniendo comunicación directa con clientes y partes interesadas.</p>
+              <ul class="experience-points">
+                <li data-es="CRM interno desarrollado con CakePHP" data-en="Internal CRM developed with CakePHP">CRM interno desarrollado con CakePHP</li>
+                <li data-es="Eventos en tiempo real mediante sockets en Node.js" data-en="Real-time events through a Node.js socket layer">Eventos en tiempo real mediante sockets en Node.js</li>
+                <li data-es="Integración con WhatsApp Business API" data-en="WhatsApp Business API integration">Integración con WhatsApp Business API</li>
+                <li data-es="Dual App construida con React Native y Expo" data-en="Dual App built with React Native and Expo">Dual App construida con React Native y Expo</li>
+                <li data-es="Notificaciones push y compatibilidad iOS / Android" data-en="Push notifications and iOS / Android compatibility">Notificaciones push y compatibilidad iOS / Android</li>
+                <li data-es="Optimización de procesos internos mediante IA" data-en="Internal process optimization through AI">Optimización de procesos internos mediante IA</li>
+                <li data-es="Análisis de datos y construcción de dashboards y reportes para apoyar decisiones basadas en datos" data-en="Data analysis and dashboard and report building to support data-driven decisions">Análisis de datos y construcción de dashboards y reportes para apoyar decisiones basadas en datos</li>
+                <li data-es="Escritura y optimización de consultas SQL complejas para extraer y analizar grandes volúmenes de datos" data-en="Writing and optimization of complex SQL queries to extract and analyze large datasets">Escritura y optimización de consultas SQL complejas para extraer y analizar grandes volúmenes de datos</li>
+                <li data-es="Automatización de flujos de trabajo y optimización de procesos con n8n" data-en="Internal workflow automation and process optimization with n8n">Automatización de flujos de trabajo y optimización de procesos con n8n</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="experience-item reveal">
+            <time class="experience-date" datetime="2025-02" data-es="FEB — JUN 2025" data-en="FEB — JUN 2025">FEB — JUN 2025</time>
+            <span class="experience-dot" aria-hidden="true"></span>
+            <div class="experience-card">
+              <div class="experience-topline">
+                <div><h3 data-es="Desarrollador FullStack" data-en="FullStack Developer">Desarrollador FullStack</h3><span class="company">CRM para Atención al Cliente · Dual Servicios</span></div>
+              </div>
+              <p data-es="Desarrollo de un sistema CRM interno para atención al cliente, siguiendo una arquitectura MVC y centralizando la operación del equipo." data-en="Developed an internal CRM system for customer service, following an MVC architecture and centralizing the team’s operations.">Desarrollo de un sistema CRM interno para atención al cliente, siguiendo una arquitectura MVC y centralizando la operación del equipo.</p>
+              <ul class="experience-points">
+                <li data-es="Desarrollo con CakePHP siguiendo la arquitectura MVC" data-en="Developed with CakePHP following the MVC architecture">Desarrollo con CakePHP siguiendo la arquitectura MVC</li>
+                <li data-es="Integración de WhatsApp Business API para comunicación directa y trazable" data-en="Integrated the WhatsApp Business API for direct, traceable communication">Integración de WhatsApp Business API para comunicación directa y trazable</li>
+                <li data-es="Diseño de base de datos y lógica central para interacciones, casos e historial de soporte" data-en="Designed the database and core logic for interactions, cases, and support history">Diseño de base de datos y lógica central para interacciones, casos e historial de soporte</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="experience-item reveal">
+            <span class="experience-date" data-es="EN DESARROLLO" data-en="IN DEVELOPMENT">EN DESARROLLO</span>
+            <span class="experience-dot" aria-hidden="true"></span>
+            <div class="experience-card">
+              <div class="experience-topline">
+                <div><h3 data-es="Cofundador & Desarrollador Principal" data-en="Co-Founder & Lead Developer">Cofundador & Desarrollador Principal</h3><span class="company">JEBRYX</span></div>
+                <span class="current-badge" data-es="Producto propio" data-en="Own product">Producto propio</span>
+              </div>
+              <p data-es="Aplicación de finanzas personales actualmente en construcción. Participo como cofundador, propietario y uno de los principales desarrolladores responsables de convertir la visión del producto en software." data-en="Personal finance application currently under development. I am a co-founder, owner, and one of the lead developers responsible for turning the product vision into software.">Aplicación de finanzas personales actualmente en construcción. Participo como cofundador, propietario y uno de los principales desarrolladores responsables de convertir la visión del producto en software.</p>
+              <ul class="experience-points">
+                <li data-es="Cofundación y propiedad del producto" data-en="Product co-founding and ownership">Cofundación y propiedad del producto</li>
+                <li data-es="Responsabilidad principal sobre el desarrollo" data-en="Lead responsibility for development">Responsabilidad principal sobre el desarrollo</li>
+                <li data-es="Construcción activa de la base técnica" data-en="Active development of the technical foundation">Construcción activa de la base técnica</li>
+                <li data-es="Enfoque en gestión de finanzas personales" data-en="Focused on personal finance management">Enfoque en gestión de finanzas personales</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="experience-item reveal">
+            <time class="experience-date" datetime="2024-02" data-es="FEB — JUN 2024" data-en="FEB — JUN 2024">FEB — JUN 2024</time>
+            <span class="experience-dot" aria-hidden="true"></span>
+            <div class="experience-card">
+              <div class="experience-topline">
+                <div><h3 data-es="Desarrollador de software" data-en="Full Stack Developer">Desarrollador de software</h3><span class="company">Proyecto TEC × UNED</span></div>
+              </div>
+              <p data-es="Diseño y desarrollo de un mapa sonoro georreferenciado para promover la cultura de Costa Rica, con navegación cartográfica y gestión de contenido auditivo." data-en="Designed and developed a georeferenced sound map to promote Costa Rican culture, including map navigation and audio content management.">Diseño y desarrollo de un mapa sonoro georreferenciado para promover la cultura de Costa Rica, con navegación cartográfica y gestión de contenido auditivo.</p>
+              <ul class="experience-points">
+                <li data-es="Arquitectura por capas con patrón MVC" data-en="Layered architecture using the MVC pattern">Arquitectura por capas con patrón MVC</li>
+                <li data-es="Modelado y construcción de base de datos" data-en="Database modeling and implementation">Modelado y construcción de base de datos</li>
+                <li data-es="Georreferenciación de sonidos y navegación en mapa" data-en="Sound georeferencing and map navigation">Georreferenciación de sonidos y navegación en mapa</li>
+                <li data-es="Desarrollo iterativo con Scrum y el conjunto WAMP" data-en="Iterative development with Scrum and the WAMP stack">Desarrollo iterativo con Scrum y el conjunto WAMP</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="experience-item reveal">
+            <time class="experience-date" datetime="2024-05" data-es="MAY — JUN 2024" data-en="MAY — JUN 2024">MAY — JUN 2024</time>
+            <span class="experience-dot" aria-hidden="true"></span>
+            <div class="experience-card">
+              <div class="experience-topline">
+                <div><h3 data-es="Desarrollador de interfaces web" data-en="Front End Developer">Desarrollador de interfaces web</h3><span class="company">Frutas y Verduras JCR</span></div>
+              </div>
+              <p data-es="Creación de una presencia digital adaptable para un comercio local, priorizando claridad, accesibilidad y una experiencia de catálogo dinámica." data-en="Created a responsive digital presence for a local business, prioritizing clarity, accessibility, and a dynamic catalog experience.">Creación de una presencia digital adaptable para un comercio local, priorizando claridad, accesibilidad y una experiencia de catálogo dinámica.</p>
+              <ul class="experience-points">
+                <li data-es="Catálogo dinámico de frutas y verduras" data-en="Dynamic fruit and vegetable catalog">Catálogo dinámico de frutas y verduras</li>
+                <li data-es="Diseño adaptable a múltiples dispositivos" data-en="Responsive design across multiple devices">Diseño adaptable a múltiples dispositivos</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+
+        <div class="project-grid stagger">
+          <article class="project-card live-project-card reveal" style="--i: 0">
+            <div class="live-browser">
+              <div class="live-browser-bar">
+                <span class="browser-dots" aria-hidden="true"><span></span><span></span><span></span></span>
+                <span class="browser-url">https://dual-global.com/</span>
+                <span class="browser-controls">
+                  <span class="live-status" data-es="En vivo" data-en="Live">En vivo</span>
+                  <button class="preview-toggle" type="button" aria-pressed="false">
+                    <span class="preview-toggle-label" data-es="Interactuar" data-en="Interact">Interactuar</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m7 3 10 9-5 1 3 6-2 1-3-6-3 4V3Z"/></svg>
+                  </button>
+                  <a class="browser-external" href="https://dual-global.com/" target="_blank" rel="noopener noreferrer" aria-label="Abrir Dual Global en una pestaña nueva" data-aria-es="Abrir Dual Global en una pestaña nueva" data-aria-en="Open Dual Global in a new tab">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 19 19 5M9 5h10v10"/></svg>
+                  </a>
+                </span>
+              </div>
+              <div class="live-frame">
+                <iframe src="https://dual-global.com/" title="Vista previa en vivo de Dual Global" data-title-es="Vista previa en vivo de Dual Global" data-title-en="Live preview of Dual Global" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" tabindex="-1"></iframe>
+                <div class="frame-shield" aria-hidden="true"></div>
+              </div>
+            </div>
+            <div class="project-content live-project-content">
+              <div class="live-project-eyebrow"><span class="project-year" data-es="2025 — HOY" data-en="2025 — NOW">2025 — HOY</span></div>
+              <h3>Dual Global</h3>
+              <p data-es="Ecosistema digital para una operación logística con servicios de mensajería, seguimiento, cotización y cobertura nacional." data-en="Digital ecosystem for a logistics operation with courier services, tracking, quoting, and nationwide coverage.">Ecosistema digital para una operación logística con servicios de mensajería, seguimiento, cotización y cobertura nacional.</p>
+              <div class="project-bottom">
+                <div class="project-tags"><span class="tag" data-es="Desarrollo integral" data-en="Full Stack">Desarrollo integral</span><span class="tag">Web</span><span class="tag">APIs</span><span class="tag" data-es="Datos" data-en="Data">Datos</span></div>
+                <div class="project-actions">
+                  <button class="case-trigger" type="button" data-case="dual"><span data-es="Ver caso" data-en="View case">Ver caso</span> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 19 19 5M9 5h10v10"/></svg></button>
+                  <a class="live-link" href="https://dual-global.com/" target="_blank" rel="noopener noreferrer"><span data-es="Abrir sitio" data-en="Open site">Abrir sitio</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 19 19 5M9 5h10v10"/></svg></a>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="project-card live-project-card reveal" style="--i: 1">
+            <div class="live-browser">
+              <div class="live-browser-bar">
+                <span class="browser-dots" aria-hidden="true"><span></span><span></span><span></span></span>
+                <span class="browser-url">frutasyverdurasjcr.netlify.app</span>
+                <span class="browser-controls">
+                  <span class="live-status" data-es="En vivo" data-en="Live">En vivo</span>
+                  <button class="preview-toggle" type="button" aria-pressed="false">
+                    <span class="preview-toggle-label" data-es="Interactuar" data-en="Interact">Interactuar</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m7 3 10 9-5 1 3 6-2 1-3-6-3 4V3Z"/></svg>
+                  </button>
+                  <a class="browser-external" href="https://frutasyverdurasjcr.netlify.app/" target="_blank" rel="noopener noreferrer" aria-label="Abrir Frutas y Verduras JCR en una pestaña nueva" data-aria-es="Abrir Frutas y Verduras JCR en una pestaña nueva" data-aria-en="Open Frutas y Verduras JCR in a new tab">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 19 19 5M9 5h10v10"/></svg>
+                  </a>
+                </span>
+              </div>
+              <div class="live-frame">
+                <iframe src="https://frutasyverdurasjcr.netlify.app/" title="Vista previa en vivo de Frutas y Verduras JCR" data-title-es="Vista previa en vivo de Frutas y Verduras JCR" data-title-en="Live preview of Frutas y Verduras JCR" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" tabindex="-1"></iframe>
+                <div class="frame-shield" aria-hidden="true"></div>
+              </div>
+            </div>
+            <div class="project-content live-project-content">
+              <div class="live-project-eyebrow"><span class="project-year">2024</span></div>
+              <h3 data-es="Frutas y Verduras JCR" data-en="Frutas y Verduras JCR">Frutas y Verduras JCR</h3>
+              <p data-es="Una vitrina web clara y adaptable que ayuda a un comercio local a presentar sus productos en cualquier dispositivo." data-en="A clear, adaptive web storefront that helps a local business showcase its products on any device.">Una vitrina web clara y adaptable que ayuda a un comercio local a presentar sus productos en cualquier dispositivo.</p>
+              <div class="project-bottom">
+                <div class="project-tags"><span class="tag">HTML</span><span class="tag">CSS</span><span class="tag">JavaScript</span><span class="tag" data-es="Adaptable" data-en="Responsive">Adaptable</span></div>
+                <div class="project-actions">
+                  <button class="case-trigger" type="button" data-case="catalog"><span data-es="Ver caso" data-en="View case">Ver caso</span> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 19 19 5M9 5h10v10"/></svg></button>
+                  <a class="live-link" href="https://frutasyverdurasjcr.netlify.app/" target="_blank" rel="noopener noreferrer"><span data-es="Abrir sitio" data-en="Open site">Abrir sitio</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 19 19 5M9 5h10v10"/></svg></a>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div class="product-collection-heading reveal" id="productos">
+          <h3 data-es="Productos que construí desde dentro." data-en="Products I built from the inside.">Productos que construí desde dentro.</h3>
+          <p data-es="Herramientas internas, experiencias móviles y un producto propio donde mi responsabilidad va más allá de una sola capa del código." data-en="Internal tools, mobile experiences, and an owned product where my responsibility goes beyond a single layer of code.">Herramientas internas, experiencias móviles y un producto propio donde mi responsabilidad va más allá de una sola capa del código.</p>
+        </div>
+
+        <div class="product-grid stagger">
+          <article class="product-card product-card-wide crm-product reveal" style="--i: 0">
+            <div class="product-copy">
+              <div class="product-status-row"><span class="product-status" data-es="Uso interno" data-en="Internal use">Uso interno</span></div>
+              <h4>Dual CRM</h4>
+              <p class="product-description" data-es="Aplicación web interna para centralizar la gestión de relaciones con clientes, agilizar el soporte y dar seguimiento a conversaciones y eventos en tiempo real." data-en="Internal web application that centralizes customer relationship management, streamlines support, and tracks conversations and events in real time.">Aplicación web interna para centralizar la gestión de relaciones con clientes, agilizar el soporte y dar seguimiento a conversaciones y eventos en tiempo real.</p>
+              <span class="product-role" data-es="Desarrollador de software · Integraciones" data-en="Full Stack Developer · Integrations">Desarrollador de software · Integraciones</span>
+              <div class="product-footer">
+                <div class="project-tags"><span class="tag">CakePHP</span><span class="tag">Node.js</span><span class="tag">Socket</span><span class="tag">WhatsApp API</span></div>
+                <button class="case-trigger" type="button" data-case="crm"><span data-es="Ver alcance" data-en="View scope">Ver alcance</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 19 19 5M9 5h10v10"/></svg></button>
+              </div>
+            </div>
+            <div class="crm-visual" aria-hidden="true">
+              <span class="socket-chip" data-es="socket.conectado / tiempo-real" data-en="socket.connected / realtime">socket.conectado / tiempo-real</span>
+              <div class="crm-window">
+                <div class="crm-sidebar"><span class="crm-logo">D</span><span class="crm-nav-dot active"></span><span class="crm-nav-dot"></span><span class="crm-nav-dot"></span><span class="crm-nav-dot"></span></div>
+                <div class="crm-main">
+                  <div class="crm-header"><span class="crm-title-lines"><span></span><span></span></span><span class="crm-search"></span></div>
+                  <div class="crm-stats"><span class="crm-stat"><small data-es="CONTACTOS" data-en="CONTACTS">CONTACTOS</small><strong>•••</strong></span><span class="crm-stat"><small data-es="EVENTOS" data-en="EVENTS">EVENTOS</small><strong data-es="EN VIVO" data-en="LIVE">EN VIVO</strong></span><span class="crm-stat"><small data-es="CANAL" data-en="CHANNEL">CANAL</small><strong>WA</strong></span></div>
+                  <div class="crm-content-grid">
+                    <div class="crm-chart"><span class="crm-chart-label" data-es="ACTIVIDAD.TIEMPO-REAL" data-en="REALTIME.ACTIVITY">ACTIVIDAD.TIEMPO-REAL</span><div class="crm-bars"><span style="--bar: 35%"></span><span style="--bar: 62%"></span><span style="--bar: 46%"></span><span style="--bar: 81%"></span><span style="--bar: 58%"></span><span style="--bar: 94%"></span><span style="--bar: 70%"></span></div></div>
+                    <div class="crm-table"><span class="crm-chart-label" data-es="CLIENTES" data-en="CUSTOMERS">CLIENTES</span><div class="crm-table-line"><span></span><span></span></div><div class="crm-table-line"><span></span><span></span></div><div class="crm-table-line"><span></span><span></span></div><div class="crm-table-line"><span></span><span></span></div></div>
+                  </div>
+                </div>
+              </div>
+              <span class="whatsapp-chip">WhatsApp Business API</span>
+            </div>
+          </article>
+
+          <article class="product-card dual-app-product reveal" style="--i: 1">
+            <div class="product-copy">
+              <div class="product-status-row"><span class="product-status">iOS + Android</span></div>
+              <h4>Dual App</h4>
+              <p class="product-description" data-es="Aplicación móvil diseñada para acceder rápidamente a los servicios de Dual desde iOS y Android." data-en="Mobile application designed for fast access to Dual services from iOS and Android.">Aplicación móvil diseñada para acceder rápidamente a los servicios de Dual desde iOS y Android.</p>
+              <span class="product-role" data-es="Desarrollador móvil · Multiplataforma" data-en="Mobile Developer · Cross-platform">Desarrollador móvil · Multiplataforma</span>
+              <div class="product-footer"><div class="project-tags"><span class="tag">React Native</span><span class="tag">Expo</span><span class="tag" data-es="Notificaciones" data-en="Push">Notificaciones</span></div><button class="case-trigger" type="button" data-case="dualApp"><span data-es="Ver alcance" data-en="View scope">Ver alcance</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 19 19 5M9 5h10v10"/></svg></button></div>
+            </div>
+            <div class="product-visual-stage">
+              <button class="phone-nav previous" type="button" data-aria-es="Pantalla anterior de Dual App" data-aria-en="Previous Dual App screen" aria-label="Pantalla anterior de Dual App">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+              </button>
+              <div class="phone-shell">
+                <span class="phone-notch" aria-hidden="true"></span>
+                <div class="phone-screen phone-carousel" tabindex="0" role="region" aria-roledescription="carrusel" data-roledescription-es="carrusel" data-roledescription-en="carousel" aria-label="Pantallas reales de Dual App" data-aria-es="Pantallas reales de Dual App" data-aria-en="Real Dual App screens">
+                  <img class="phone-slide active" src="dual-app-splash.png" alt="Pantalla de bienvenida de Dual App" data-alt-es="Pantalla de bienvenida de Dual App" data-alt-en="Dual App welcome screen" draggable="false">
+                  <img class="phone-slide" src="dual-app-login-dark.png" alt="Inicio de sesión de Dual App en modo oscuro" data-alt-es="Inicio de sesión de Dual App en modo oscuro" data-alt-en="Dual App login in dark mode" loading="lazy" draggable="false">
+                  <img class="phone-slide" src="dual-app-login-light.png" alt="Inicio de sesión de Dual App en modo claro" data-alt-es="Inicio de sesión de Dual App en modo claro" data-alt-en="Dual App login in light mode" loading="lazy" draggable="false">
+                  <div class="phone-dots" aria-label="Seleccionar pantalla" data-aria-es="Seleccionar pantalla" data-aria-en="Select screen">
+                    <button class="phone-dot active" type="button" data-slide="0" aria-label="Mostrar pantalla de bienvenida" data-aria-es="Mostrar pantalla de bienvenida" data-aria-en="Show welcome screen" aria-current="true"></button>
+                    <button class="phone-dot" type="button" data-slide="1" aria-label="Mostrar inicio de sesión oscuro" data-aria-es="Mostrar inicio de sesión oscuro" data-aria-en="Show dark login screen" aria-current="false"></button>
+                    <button class="phone-dot" type="button" data-slide="2" aria-label="Mostrar inicio de sesión claro" data-aria-es="Mostrar inicio de sesión claro" data-aria-en="Show light login screen" aria-current="false"></button>
+                  </div>
+                </div>
+              </div>
+              <button class="phone-nav next" type="button" data-aria-es="Siguiente pantalla de Dual App" data-aria-en="Next Dual App screen" aria-label="Siguiente pantalla de Dual App">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+              </button>
+            </div>
+            <div class="push-notification" aria-hidden="true"><small>DUAL · AHORA</small><strong data-es="Tu paquete cambió de estado" data-en="Your package status changed">Tu paquete cambió de estado</strong></div>
+            <div class="platform-row" aria-hidden="true"><span>iOS</span><span>Android</span><span>Expo</span></div>
+          </article>
+
+          <article class="product-card jebryx-product reveal" style="--i: 2">
+            <span class="founder-badge" data-es="Cofundador<br>Propietario" data-en="Founder<br>Owned">Cofundador<br>Propietario</span>
+            <div class="product-copy">
+              <div class="product-status-row"><span class="product-status development" data-es="En desarrollo" data-en="In development">En desarrollo</span></div>
+              <h4>JEBRYX</h4>
+              <p class="product-description" data-es="Aplicación móvil de finanzas personales creada con React Native y Expo, integración de Google y un asistente financiero de IA conectado mediante n8n." data-en="Personal finance mobile app built with React Native and Expo, Google integration, and an AI financial coach connected through n8n.">Aplicación móvil de finanzas personales creada con React Native y Expo, integración de Google y un asistente financiero de IA conectado mediante n8n.</p>
+              <span class="product-role" data-es="Cofundador · Propietario · Desarrollador principal" data-en="Co-Founder · Owner · Lead Developer">Cofundador · Propietario · Desarrollador principal</span>
+              <div class="product-footer"><div class="project-tags"><span class="tag">React Native</span><span class="tag">Expo</span><span class="tag">Google</span><span class="tag">n8n + IA</span></div><button class="case-trigger" type="button" data-case="jebryx"><span data-es="Ver visión" data-en="View vision">Ver visión</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 19 19 5M9 5h10v10"/></svg></button></div>
+            </div>
+            <div class="product-visual-stage jebryx-phone-stage">
+              <button class="phone-nav previous" type="button" data-aria-es="Pantalla anterior de JEBRYX" data-aria-en="Previous JEBRYX screen" aria-label="Pantalla anterior de JEBRYX">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+              </button>
+              <div class="phone-shell">
+                <span class="phone-notch" aria-hidden="true"></span>
+                <div class="phone-screen phone-carousel" tabindex="0" role="region" aria-roledescription="carrusel" data-roledescription-es="carrusel" data-roledescription-en="carousel" aria-label="Pantallas reales de la aplicación móvil JEBRYX" data-aria-es="Pantallas reales de la aplicación móvil JEBRYX" data-aria-en="Real screens from the JEBRYX mobile app">
+                  <img class="phone-slide active" src="jebryx-01-splash.png" alt="Pantalla de carga de JEBRYX" data-alt-es="Pantalla de carga de JEBRYX" data-alt-en="JEBRYX loading screen" draggable="false">
+                  <img class="phone-slide" src="jebryx-02-login-en.png" alt="Inicio de sesión de JEBRYX en inglés" data-alt-es="Inicio de sesión de JEBRYX en inglés" data-alt-en="JEBRYX login in English" loading="lazy" draggable="false">
+                  <img class="phone-slide" src="jebryx-03-login-es.png" alt="Inicio de sesión de JEBRYX en español" data-alt-es="Inicio de sesión de JEBRYX en español" data-alt-en="JEBRYX login in Spanish" loading="lazy" draggable="false">
+                  <img class="phone-slide" src="jebryx-04-dashboard.png" alt="Panel principal con balance y gastos de JEBRYX" data-alt-es="Panel principal con balance y gastos de JEBRYX" data-alt-en="JEBRYX dashboard with balance and expenses" loading="lazy" draggable="false">
+                  <img class="phone-slide" src="jebryx-05-transactions.png" alt="Historial de movimientos de JEBRYX" data-alt-es="Historial de movimientos de JEBRYX" data-alt-en="JEBRYX transaction history" loading="lazy" draggable="false">
+                  <img class="phone-slide" src="jebryx-06-new-transaction.png" alt="Formulario para registrar un movimiento en JEBRYX" data-alt-es="Formulario para registrar un movimiento en JEBRYX" data-alt-en="Form to add a transaction in JEBRYX" loading="lazy" draggable="false">
+                  <img class="phone-slide" src="jebryx-07-coach.png" alt="Asistente financiero integrado de JEBRYX" data-alt-es="Asistente financiero integrado de JEBRYX" data-alt-en="Integrated JEBRYX financial coach" loading="lazy" draggable="false">
+                  <img class="phone-slide" src="jebryx-08-settings.png" alt="Ajustes de perfil y preferencias de JEBRYX" data-alt-es="Ajustes de perfil y preferencias de JEBRYX" data-alt-en="JEBRYX profile and preference settings" loading="lazy" draggable="false">
+                  <img class="phone-slide" src="jebryx-09-reports.png" alt="Reportes financieros de JEBRYX" data-alt-es="Reportes financieros de JEBRYX" data-alt-en="JEBRYX financial reports" loading="lazy" draggable="false">
+                  <div class="phone-dots" aria-label="Seleccionar pantalla de JEBRYX" data-aria-es="Seleccionar pantalla de JEBRYX" data-aria-en="Select a JEBRYX screen">
+                    <button class="phone-dot active" type="button" data-slide="0" aria-label="Mostrar pantalla de carga" data-aria-es="Mostrar pantalla de carga" data-aria-en="Show loading screen" aria-current="true"></button>
+                    <button class="phone-dot" type="button" data-slide="1" aria-label="Mostrar acceso en inglés" data-aria-es="Mostrar acceso en inglés" data-aria-en="Show English login" aria-current="false"></button>
+                    <button class="phone-dot" type="button" data-slide="2" aria-label="Mostrar acceso en español" data-aria-es="Mostrar acceso en español" data-aria-en="Show Spanish login" aria-current="false"></button>
+                    <button class="phone-dot" type="button" data-slide="3" aria-label="Mostrar panel principal" data-aria-es="Mostrar panel principal" data-aria-en="Show dashboard" aria-current="false"></button>
+                    <button class="phone-dot" type="button" data-slide="4" aria-label="Mostrar movimientos" data-aria-es="Mostrar movimientos" data-aria-en="Show transactions" aria-current="false"></button>
+                    <button class="phone-dot" type="button" data-slide="5" aria-label="Mostrar nuevo movimiento" data-aria-es="Mostrar nuevo movimiento" data-aria-en="Show new transaction" aria-current="false"></button>
+                    <button class="phone-dot" type="button" data-slide="6" aria-label="Mostrar asistente financiero" data-aria-es="Mostrar asistente financiero" data-aria-en="Show financial coach" aria-current="false"></button>
+                    <button class="phone-dot" type="button" data-slide="7" aria-label="Mostrar ajustes" data-aria-es="Mostrar ajustes" data-aria-en="Show settings" aria-current="false"></button>
+                    <button class="phone-dot" type="button" data-slide="8" aria-label="Mostrar reportes" data-aria-es="Mostrar reportes" data-aria-en="Show reports" aria-current="false"></button>
+                  </div>
+                </div>
+              </div>
+              <button class="phone-nav next" type="button" data-aria-es="Siguiente pantalla de JEBRYX" data-aria-en="Next JEBRYX screen" aria-label="Siguiente pantalla de JEBRYX">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+              </button>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="stack" data-section>
+      <div class="page-shell">
+        <div class="section-label reveal"><span data-es="04 / Tecnologías" data-en="04 / Stack">04 / Tecnologías</span></div>
+        <div class="section-heading reveal">
+          <h2 data-es="Herramientas para <em>resolver, no decorar.</em>" data-en="Tools to <em>solve, not decorate.</em>">Herramientas para <em>resolver, no decorar.</em></h2>
+          <p data-es="Un conjunto versátil de tecnologías para elegir la más adecuada según el problema, la escala y las necesidades del equipo." data-en="A versatile stack for selecting technology based on the problem, scale, and team needs.">Un conjunto versátil de tecnologías para elegir la más adecuada según el problema, la escala y las necesidades del equipo.</p>
+        </div>
+
+        <div class="stack-console reveal">
+          <div class="stack-toolbar">
+            <div class="skill-filters" role="group" aria-label="Filtrar habilidades" data-aria-es="Filtrar habilidades" data-aria-en="Filter skills">
+              <button class="skill-filter active" type="button" data-filter="all" data-es="Todo" data-en="All">Todo</button>
+              <button class="skill-filter" type="button" data-filter="language" data-es="Lenguajes" data-en="Languages">Lenguajes</button>
+              <button class="skill-filter" type="button" data-filter="framework" data-es="Marcos de trabajo" data-en="Frameworks">Marcos de trabajo</button>
+              <button class="skill-filter" type="button" data-filter="database" data-es="Datos" data-en="Data">Datos</button>
+              <button class="skill-filter" type="button" data-filter="tool" data-es="Herramientas" data-en="Tools">Herramientas</button>
+            </div>
+          </div>
+          <div class="skills-grid">
+            <div class="skill-item" data-category="language"><span class="skill-glyph">TS</span><span><span class="skill-name">TypeScript</span><small class="skill-category" data-es="Lenguaje" data-en="Language">Lenguaje</small></span></div>
+            <div class="skill-item" data-category="language"><span class="skill-glyph">JS</span><span><span class="skill-name">JavaScript</span><small class="skill-category" data-es="Lenguaje" data-en="Language">Lenguaje</small></span></div>
+            <div class="skill-item" data-category="language"><span class="skill-glyph">PY</span><span><span class="skill-name">Python</span><small class="skill-category" data-es="Lenguaje" data-en="Language">Lenguaje</small></span></div>
+            <div class="skill-item" data-category="language"><span class="skill-glyph">JV</span><span><span class="skill-name">Java</span><small class="skill-category" data-es="Lenguaje" data-en="Language">Lenguaje</small></span></div>
+            <div class="skill-item" data-category="language"><span class="skill-glyph">RS</span><span><span class="skill-name">Rust</span><small class="skill-category" data-es="Lenguaje" data-en="Language">Lenguaje</small></span></div>
+            <div class="skill-item" data-category="language"><span class="skill-glyph">C++</span><span><span class="skill-name">C / C++</span><small class="skill-category" data-es="Lenguaje" data-en="Language">Lenguaje</small></span></div>
+            <div class="skill-item" data-category="language"><span class="skill-glyph">PHP</span><span><span class="skill-name">PHP</span><small class="skill-category" data-es="Lenguaje" data-en="Language">Lenguaje</small></span></div>
+            <div class="skill-item" data-category="language"><span class="skill-glyph">&lt;/&gt;</span><span><span class="skill-name">HTML / CSS</span><small class="skill-category" data-es="Lenguaje" data-en="Language">Lenguaje</small></span></div>
+            <div class="skill-item" data-category="framework"><span class="skill-glyph">RE</span><span><span class="skill-name">React</span><small class="skill-category" data-es="Interfaz" data-en="Frontend">Interfaz</small></span></div>
+            <div class="skill-item" data-category="framework"><span class="skill-glyph">RN</span><span><span class="skill-name">React Native</span><small class="skill-category" data-es="Móvil" data-en="Mobile">Móvil</small></span></div>
+            <div class="skill-item" data-category="framework"><span class="skill-glyph">EX</span><span><span class="skill-name">Expo</span><small class="skill-category" data-es="Móvil" data-en="Mobile">Móvil</small></span></div>
+            <div class="skill-item" data-category="framework"><span class="skill-glyph">ND</span><span><span class="skill-name">Node.js</span><small class="skill-category" data-es="Servidor" data-en="Backend">Servidor</small></span></div>
+            <div class="skill-item" data-category="framework"><span class="skill-glyph">EX</span><span><span class="skill-name">Express</span><small class="skill-category" data-es="Servidor" data-en="Backend">Servidor</small></span></div>
+            <div class="skill-item" data-category="framework"><span class="skill-glyph">NG</span><span><span class="skill-name">Angular</span><small class="skill-category" data-es="Interfaz" data-en="Frontend">Interfaz</small></span></div>
+            <div class="skill-item" data-category="framework"><span class="skill-glyph">CP</span><span><span class="skill-name">CakePHP</span><small class="skill-category" data-es="Desarrollo integral" data-en="Full Stack">Desarrollo integral</small></span></div>
+            <div class="skill-item" data-category="database"><span class="skill-glyph">MY</span><span><span class="skill-name">MySQL</span><small class="skill-category" data-es="Base de datos" data-en="Database">Base de datos</small></span></div>
+            <div class="skill-item" data-category="database"><span class="skill-glyph">MS</span><span><span class="skill-name">SQL Server</span><small class="skill-category" data-es="Base de datos" data-en="Database">Base de datos</small></span></div>
+            <div class="skill-item" data-category="database"><span class="skill-glyph">MG</span><span><span class="skill-name">MongoDB</span><small class="skill-category" data-es="Base de datos" data-en="Database">Base de datos</small></span></div>
+            <div class="skill-item" data-category="database"><span class="skill-glyph">OR</span><span><span class="skill-name">Oracle</span><small class="skill-category" data-es="Base de datos" data-en="Database">Base de datos</small></span></div>
+            <div class="skill-item" data-category="database"><span class="skill-glyph">MA</span><span><span class="skill-name">MariaDB</span><small class="skill-category" data-es="Base de datos" data-en="Database">Base de datos</small></span></div>
+            <div class="skill-item" data-category="tool"><span class="skill-glyph">GT</span><span><span class="skill-name">Git / GitHub</span><small class="skill-category" data-es="Herramienta" data-en="Tool">Herramienta</small></span></div>
+            <div class="skill-item" data-category="tool"><span class="skill-glyph">PM</span><span><span class="skill-name">Postman</span><small class="skill-category">API</small></span></div>
+            <div class="skill-item" data-category="tool"><span class="skill-glyph">WA</span><span><span class="skill-name">WhatsApp Business API</span><small class="skill-category">API</small></span></div>
+            <div class="skill-item" data-category="tool"><span class="skill-glyph">SO</span><span><span class="skill-name" data-es="Sockets en tiempo real" data-en="Real-time Sockets">Sockets en tiempo real</span><small class="skill-category" data-es="Servidor" data-en="Backend">Servidor</small></span></div>
+            <div class="skill-item" data-category="tool"><span class="skill-glyph">FG</span><span><span class="skill-name">Figma</span><small class="skill-category" data-es="Diseño" data-en="Design">Diseño</small></span></div>
+            <div class="skill-item" data-category="tool"><span class="skill-glyph">SC</span><span><span class="skill-name">Scrum</span><small class="skill-category" data-es="Metodología" data-en="Methodology">Metodología</small></span></div>
+            <div class="skill-item" data-category="tool"><span class="skill-glyph">JR</span><span><span class="skill-name">Jira</span><small class="skill-category" data-es="Gestión" data-en="Project management">Gestión</small></span></div>
+            <div class="skill-item" data-category="tool"><span class="skill-glyph">TR</span><span><span class="skill-name">Trello</span><small class="skill-category" data-es="Gestión" data-en="Project management">Gestión</small></span></div>
+            <div class="skill-item" data-category="tool"><span class="skill-glyph">UM</span><span><span class="skill-name">UML</span><small class="skill-category" data-es="Modelado" data-en="Modeling">Modelado</small></span></div>
+            <div class="skill-item" data-category="tool"><span class="skill-glyph">NP</span><span><span class="skill-name">npm</span><small class="skill-category" data-es="Herramienta" data-en="Tool">Herramienta</small></span></div>
+            <div class="skill-item" data-category="tool"><span class="skill-glyph">N8</span><span><span class="skill-name">n8n</span><small class="skill-category" data-es="Automatización" data-en="Automation">Automatización</small></span></div>
+            <div class="skill-item" data-category="tool"><span class="skill-glyph">OS</span><span><span class="skill-name">Windows / Linux</span><small class="skill-category" data-es="Sistemas operativos" data-en="Operating systems">Sistemas operativos</small></span></div>
+          </div>
+        </div>
+
+        <div class="soft-skills reveal">
+          <span class="soft-skill" data-es="Liderazgo" data-en="Leadership">Liderazgo</span>
+          <span class="soft-skill" data-es="Trabajo en equipo" data-en="Teamwork">Trabajo en equipo</span>
+          <span class="soft-skill" data-es="Comunicación" data-en="Communication">Comunicación</span>
+          <span class="soft-skill" data-es="Resolución de problemas" data-en="Problem solving">Resolución de problemas</span>
+          <span class="soft-skill" data-es="Pensamiento crítico" data-en="Critical thinking">Pensamiento crítico</span>
+          <span class="soft-skill" data-es="Adaptabilidad" data-en="Adaptability">Adaptabilidad</span>
+        </div>
+
+        <div class="education-strip reveal">
+          <span class="education-logo">TEC</span>
+          <div><h3 data-es="Instituto Tecnológico de Costa Rica" data-en="Costa Rica Institute of Technology">Instituto Tecnológico de Costa Rica</h3><p data-es="Bachillerato en Ingeniería en Computación" data-en="Bachelor's Degree in Computer Engineering">Bachillerato en Ingeniería en Computación</p></div>
+          <span class="education-date">2021 — 2025</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section contact-section" id="contacto" data-section>
+      <div class="page-shell">
+        <div class="contact-panel reveal">
+          <div class="section-label"><span data-es="05 / Contacto" data-en="05 / Contact">05 / Contacto</span></div>
+          <h2 data-es="¿Creamos algo que <span>importe?</span>" data-en="Let's build something that <span>matters.</span>">¿Creamos algo que <span>importe?</span></h2>
+          <p data-es="Siempre estoy interesado en conversaciones sobre productos, tecnología y retos donde el software pueda generar un impacto real." data-en="I'm always interested in conversations about products, technology, and challenges where software can make a real impact.">Siempre estoy interesado en conversaciones sobre productos, tecnología y retos donde el software pueda generar un impacto real.</p>
+          <div class="contact-links">
+            <a class="button button-primary" href="mailto:bryancastrosolis732@gmail.com?subject=Conversemos%20sobre%20una%20oportunidad">
+              <span data-es="Escríbeme" data-en="Email me">Escríbeme</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 6h18v12H3zM3 7l9 7 9-7"/></svg>
+            </a>
+            <a class="button button-secondary" href="https://www.linkedin.com/in/bryancastrosolis/" target="_blank" rel="noopener noreferrer">
+              <span>LinkedIn</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 19 19 5M9 5h10v10"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-inner page-shell">
+      <span>© <span id="year">2026</span> Bryan Castro Solís</span>
+    </div>
+  </footer>
+
+  <dialog class="case-dialog" id="case-dialog" aria-labelledby="dialog-title">
+    <div class="dialog-inner">
+      <button class="dialog-close" type="button" aria-label="Cerrar" data-aria-es="Cerrar" data-aria-en="Close">×</button>
+      <span class="dialog-kicker" id="dialog-kicker" data-es="CASO DE ESTUDIO" data-en="CASE STUDY">CASO DE ESTUDIO</span>
+      <h3 id="dialog-title"></h3>
+      <p class="dialog-summary" id="dialog-summary"></p>
+      <div class="dialog-section"><h4 id="dialog-role-label">Mi contribución</h4><ul id="dialog-points"></ul></div>
+      <div class="dialog-tags" id="dialog-tags"></div>
+    </div>
+  </dialog>
+
+  <script>
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let currentLang = 'es';
+    try {
+      currentLang = localStorage.getItem('portfolio-language') || 'es';
+    } catch (error) {
+      currentLang = 'es';
+    }
+
+    const htmlTranslations = document.querySelectorAll('[data-es][data-en]');
+    const ariaTranslations = document.querySelectorAll('[data-aria-es][data-aria-en]');
+    const titleTranslations = document.querySelectorAll('[data-title-es][data-title-en]');
+    const altTranslations = document.querySelectorAll('[data-alt-es][data-alt-en]');
+    const roleDescriptionTranslations = document.querySelectorAll('[data-roledescription-es][data-roledescription-en]');
+    const languageButton = document.querySelector('.language-switch');
+    const cvDownload = document.querySelector('[data-cv-es][data-cv-en]');
+
+    function syncPreviewButton(button) {
+      const active = button.closest('.live-project-card').classList.contains('is-interactive');
+      const label = button.querySelector('.preview-toggle-label');
+      label.textContent = active
+        ? (currentLang === 'es' ? 'Finalizar' : 'Exit preview')
+        : (currentLang === 'es' ? 'Interactuar' : 'Interact');
+      button.setAttribute('aria-label', active
+        ? (currentLang === 'es' ? 'Desactivar interacción con la vista previa' : 'Disable preview interaction')
+        : (currentLang === 'es' ? 'Activar interacción con la vista previa' : 'Enable preview interaction'));
+    }
+
+    function applyLanguage(lang) {
+      currentLang = lang;
+      document.documentElement.lang = lang;
+      document.title = lang === 'es' ? 'Bryan Castro | Desarrollador de software' : 'Bryan Castro | Full Stack Developer';
+      htmlTranslations.forEach((element) => {
+        element.innerHTML = element.dataset[lang];
+      });
+      ariaTranslations.forEach((element) => {
+        element.setAttribute('aria-label', lang === 'es' ? element.dataset.ariaEs : element.dataset.ariaEn);
+      });
+      titleTranslations.forEach((element) => {
+        element.setAttribute('title', lang === 'es' ? element.dataset.titleEs : element.dataset.titleEn);
+      });
+      altTranslations.forEach((element) => {
+        element.setAttribute('alt', lang === 'es' ? element.dataset.altEs : element.dataset.altEn);
+      });
+      roleDescriptionTranslations.forEach((element) => {
+        element.setAttribute('aria-roledescription', lang === 'es' ? element.dataset.roledescriptionEs : element.dataset.roledescriptionEn);
+      });
+      if (cvDownload) {
+        const cvFile = lang === 'es' ? cvDownload.dataset.cvEs : cvDownload.dataset.cvEn;
+        cvDownload.href = cvFile;
+        cvDownload.download = cvFile;
+      }
+      document.querySelectorAll('.preview-toggle').forEach(syncPreviewButton);
+      languageButton.textContent = lang === 'es' ? 'EN' : 'ES';
+      try {
+        localStorage.setItem('portfolio-language', lang);
+      } catch (error) {
+        // The language toggle still works when storage is unavailable.
+      }
+      restartRoleAnimation();
+    }
+
+    languageButton.addEventListener('click', () => applyLanguage(currentLang === 'es' ? 'en' : 'es'));
+
+    const roleElement = document.querySelector('.typed-role');
+    const roles = {
+      es: ['Desarrollador de software web y móvil', 'Ingeniero en Computación', 'Creador de productos digitales'],
+      en: ['Full Stack Developer', 'Computer Engineer', 'Digital Product Builder']
+    };
+    let typingTimer;
+    let roleIndex = 0;
+    let characterIndex = 0;
+    let deleting = false;
+
+    function typeRole() {
+      const role = roles[currentLang][roleIndex];
+      if (prefersReducedMotion) {
+        roleElement.textContent = role;
+        return;
+      }
+
+      characterIndex += deleting ? -1 : 1;
+      roleElement.textContent = role.slice(0, characterIndex);
+
+      let delay = deleting ? 34 : 62;
+      if (!deleting && characterIndex === role.length) {
+        deleting = true;
+        delay = 1450;
+      } else if (deleting && characterIndex === 0) {
+        deleting = false;
+        roleIndex = (roleIndex + 1) % roles[currentLang].length;
+        delay = 280;
+      }
+      typingTimer = window.setTimeout(typeRole, delay);
+    }
+
+    function restartRoleAnimation() {
+      window.clearTimeout(typingTimer);
+      roleIndex = 0;
+      characterIndex = 0;
+      deleting = false;
+      roleElement.textContent = '';
+      typeRole();
+    }
+
+    const header = document.querySelector('.site-header');
+    const progress = document.querySelector('.scroll-progress');
+    const updateScrollUI = () => {
+      const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+      const amount = scrollable > 0 ? (window.scrollY / scrollable) * 100 : 0;
+      progress.style.width = `${amount}%`;
+      header.classList.toggle('scrolled', window.scrollY > 24);
+    };
+    window.addEventListener('scroll', updateScrollUI, { passive: true });
+    updateScrollUI();
+
+    const menuButton = document.querySelector('.menu-toggle');
+    const navLinks = document.querySelector('.nav-links');
+    function closeMenu() {
+      menuButton.setAttribute('aria-expanded', 'false');
+      navLinks.classList.remove('open');
+      document.body.classList.remove('menu-open');
+    }
+    menuButton.addEventListener('click', () => {
+      const open = menuButton.getAttribute('aria-expanded') === 'true';
+      menuButton.setAttribute('aria-expanded', String(!open));
+      navLinks.classList.toggle('open', !open);
+      document.body.classList.toggle('menu-open', !open);
+    });
+    document.querySelectorAll('.nav-link').forEach((link) => link.addEventListener('click', closeMenu));
+
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px' });
+    document.querySelectorAll('.reveal').forEach((element) => revealObserver.observe(element));
+
+    const sectionObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        document.querySelectorAll('.nav-link').forEach((link) => {
+          link.classList.toggle('active', link.getAttribute('href') === `#${entry.target.id}`);
+        });
+      });
+    }, { rootMargin: '-35% 0px -55%', threshold: 0 });
+    document.querySelectorAll('[data-section]').forEach((section) => sectionObserver.observe(section));
+
+    const filters = document.querySelectorAll('.skill-filter');
+    const skillItems = document.querySelectorAll('.skill-item');
+    filters.forEach((filter) => {
+      filter.addEventListener('click', () => {
+        filters.forEach((button) => button.classList.remove('active'));
+        filter.classList.add('active');
+        const category = filter.dataset.filter;
+        skillItems.forEach((item) => item.classList.toggle('is-hidden', category !== 'all' && item.dataset.category !== category));
+      });
+    });
+
+    const previewButtons = document.querySelectorAll('.preview-toggle');
+    previewButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const selectedCard = button.closest('.live-project-card');
+        const shouldActivate = !selectedCard.classList.contains('is-interactive');
+
+        document.querySelectorAll('.live-project-card').forEach((card) => {
+          card.classList.remove('is-interactive');
+          card.querySelector('.preview-toggle').setAttribute('aria-pressed', 'false');
+          card.querySelector('iframe').setAttribute('tabindex', '-1');
+          syncPreviewButton(card.querySelector('.preview-toggle'));
+        });
+
+        if (shouldActivate) {
+          selectedCard.classList.add('is-interactive');
+          button.setAttribute('aria-pressed', 'true');
+          selectedCard.querySelector('iframe').setAttribute('tabindex', '0');
+          syncPreviewButton(button);
+        }
+      });
+    });
+
+    document.querySelectorAll('.phone-carousel').forEach((phoneCarousel) => {
+      const phoneStage = phoneCarousel.closest('.product-visual-stage');
+      const phoneSlides = [...phoneCarousel.querySelectorAll('.phone-slide')];
+      const phoneDots = [...phoneCarousel.querySelectorAll('.phone-dot')];
+      const previousScreen = phoneStage.querySelector('.phone-nav.previous');
+      const nextScreen = phoneStage.querySelector('.phone-nav.next');
+      let phoneSlideIndex = 0;
+      let phoneTimer;
+      let phoneIsVisible = false;
+      let pointerStartX = null;
+
+      const showPhoneSlide = (nextIndex) => {
+        phoneSlideIndex = (nextIndex + phoneSlides.length) % phoneSlides.length;
+        phoneSlides.forEach((slide, index) => {
+          const active = index === phoneSlideIndex;
+          slide.classList.toggle('active', active);
+          slide.setAttribute('aria-hidden', String(!active));
+        });
+        phoneDots.forEach((dot, index) => {
+          const active = index === phoneSlideIndex;
+          dot.classList.toggle('active', active);
+          dot.setAttribute('aria-current', String(active));
+        });
+      };
+
+      const stopPhoneCarousel = () => window.clearInterval(phoneTimer);
+      const startPhoneCarousel = () => {
+        stopPhoneCarousel();
+        if (!prefersReducedMotion && phoneIsVisible) {
+          phoneTimer = window.setInterval(() => showPhoneSlide(phoneSlideIndex + 1), 3600);
+        }
+      };
+      const selectPhoneSlide = (nextIndex) => {
+        showPhoneSlide(nextIndex);
+        startPhoneCarousel();
+      };
+
+      previousScreen.addEventListener('click', () => selectPhoneSlide(phoneSlideIndex - 1));
+      nextScreen.addEventListener('click', () => selectPhoneSlide(phoneSlideIndex + 1));
+      phoneDots.forEach((dot) => dot.addEventListener('click', () => selectPhoneSlide(Number(dot.dataset.slide))));
+
+      phoneCarousel.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowLeft') {
+          event.preventDefault();
+          selectPhoneSlide(phoneSlideIndex - 1);
+        }
+        if (event.key === 'ArrowRight') {
+          event.preventDefault();
+          selectPhoneSlide(phoneSlideIndex + 1);
+        }
+      });
+
+      phoneCarousel.addEventListener('pointerdown', (event) => {
+        pointerStartX = event.clientX;
+      });
+      phoneCarousel.addEventListener('pointerup', (event) => {
+        if (pointerStartX === null) return;
+        const distance = event.clientX - pointerStartX;
+        if (Math.abs(distance) > 34) selectPhoneSlide(phoneSlideIndex + (distance < 0 ? 1 : -1));
+        pointerStartX = null;
+      });
+      phoneCarousel.addEventListener('pointercancel', () => { pointerStartX = null; });
+
+      phoneStage.addEventListener('mouseenter', stopPhoneCarousel);
+      phoneStage.addEventListener('mouseleave', startPhoneCarousel);
+      phoneStage.addEventListener('focusin', stopPhoneCarousel);
+      phoneStage.addEventListener('focusout', () => {
+        window.setTimeout(() => {
+          if (!phoneStage.contains(document.activeElement)) startPhoneCarousel();
+        }, 0);
+      });
+
+      const phoneObserver = new IntersectionObserver(([entry]) => {
+        phoneIsVisible = entry.isIntersecting;
+        if (phoneIsVisible) startPhoneCarousel();
+        else stopPhoneCarousel();
+      }, { threshold: 0.35 });
+      phoneObserver.observe(phoneStage);
+      showPhoneSlide(0);
+    });
+
+    if (!prefersReducedMotion && window.matchMedia('(hover: hover)').matches) {
+      document.querySelectorAll('.tilt-card').forEach((card) => {
+        card.addEventListener('pointermove', (event) => {
+          const rect = card.getBoundingClientRect();
+          const x = (event.clientX - rect.left) / rect.width - 0.5;
+          const y = (event.clientY - rect.top) / rect.height - 0.5;
+          card.style.setProperty('--rx', `${y * -5}deg`);
+          card.style.setProperty('--ry', `${x * 6}deg`);
+        });
+        card.addEventListener('pointerleave', () => {
+          card.style.setProperty('--rx', '0deg');
+          card.style.setProperty('--ry', '0deg');
+        });
+      });
+    }
+
+    const cursorGlow = document.querySelector('.cursor-glow');
+    window.addEventListener('pointermove', (event) => {
+      cursorGlow.style.left = `${event.clientX}px`;
+      cursorGlow.style.top = `${event.clientY}px`;
+      cursorGlow.classList.add('visible');
+    }, { passive: true });
+
+    const caseData = {
+      dual: {
+        es: {
+          kicker: 'CASO DE ESTUDIO 01 · DUAL SERVICIOS',
+          title: 'Dual Global',
+          summary: 'Un ecosistema digital orientado a conectar clientes con una operación logística de alcance nacional e internacional.',
+          label: 'Mi contribución',
+          points: ['Participé en el ciclo completo de soluciones web, móviles, APIs y bases de datos.', 'Colaboré con clientes y partes interesadas en definición, soporte y planificación de despliegues.', 'Apliqué prácticas ágiles y mejora continua para fortalecer la calidad de las entregas.'],
+          tags: ['Desarrollo integral', 'Web', 'APIs', 'Bases de datos', 'Scrum']
+        },
+        en: {
+          kicker: 'CASE STUDY 01 · DUAL SERVICIOS',
+          title: 'Dual Global',
+          summary: 'A digital ecosystem designed to connect customers with a nationwide and international logistics operation.',
+          label: 'My contribution',
+          points: ['Contributed across the full lifecycle of web and mobile solutions, APIs, and databases.', 'Collaborated with clients and stakeholders on definition, support, and deployment planning.', 'Applied Agile practices and continuous improvement to strengthen delivery quality.'],
+          tags: ['Full Stack', 'Web', 'APIs', 'Databases', 'Scrum']
+        }
+      },
+      catalog: {
+        es: {
+          kicker: 'CASO DE ESTUDIO 02 · FRUTAS Y VERDURAS JCR',
+          title: 'Catálogo digital adaptable',
+          summary: 'Una presencia web pensada para mejorar la visibilidad de un comercio local y facilitar la consulta de su oferta desde cualquier dispositivo.',
+          label: 'Mi contribución',
+          points: ['Diseñé una interfaz clara y accesible centrada en el catálogo de productos.', 'Implementé un comportamiento adaptable para móvil, tableta y escritorio.', 'Organicé el trabajo de forma iterativa aplicando la metodología Scrum.'],
+          tags: ['HTML', 'CSS', 'JavaScript', 'Interfaz adaptable', 'Scrum']
+        },
+        en: {
+          kicker: 'CASE STUDY 02 · FRUTAS Y VERDURAS JCR',
+          title: 'Responsive Digital Catalog',
+          summary: 'A web presence designed to improve a local business’s visibility and make its product offering easy to browse on any device.',
+          label: 'My contribution',
+          points: ['Designed a clear, accessible interface centered on the product catalog.', 'Implemented responsive behavior for mobile, tablet, and desktop.', 'Organized the work iteratively using the Scrum methodology.'],
+          tags: ['HTML', 'CSS', 'JavaScript', 'Responsive UI', 'Scrum']
+        }
+      },
+      crm: {
+        es: {
+          kicker: 'CASO DE PRODUCTO 03 · DUAL CRM',
+          title: 'CRM interno de Dual',
+          summary: 'Aplicación web interna para gestionar relaciones con clientes, centralizar el soporte y facilitar el seguimiento operativo del equipo.',
+          label: 'Lo que construí',
+          points: ['Implementé la aplicación web utilizando CakePHP.', 'Desarrollé una capa de sockets con Node.js para gestionar eventos en tiempo real.', 'Integré WhatsApp Business API para soporte, comunicación y seguimiento de clientes.', 'Conecté estas capacidades dentro de una experiencia de uso orientada al trabajo diario del equipo.'],
+          tags: ['CakePHP', 'Node.js', 'Sockets', 'WhatsApp Business API', 'CRM']
+        },
+        en: {
+          kicker: 'PRODUCT CASE 03 · DUAL CRM',
+          title: 'Dual Internal CRM',
+          summary: 'Internal web application for customer relationship management, centralized support, and operational follow-up across the team.',
+          label: 'What I built',
+          points: ['Implemented the web application using CakePHP.', 'Developed a Node.js socket layer to handle real-time events.', 'Integrated the WhatsApp Business API for customer support, communication, and follow-up.', 'Connected these capabilities into an experience designed for the team’s daily workflow.'],
+          tags: ['CakePHP', 'Node.js', 'Sockets', 'WhatsApp Business API', 'CRM']
+        }
+      },
+      dualApp: {
+        es: {
+          kicker: 'CASO DE PRODUCTO 04 · DUAL APP',
+          title: 'Dual App',
+          summary: 'Aplicación móvil multiplataforma diseñada para ofrecer acceso rápido a los servicios de Dual.',
+          label: 'Lo que construí',
+          points: ['Desarrollé la aplicación utilizando React Native y Expo.', 'Implementé soporte para notificaciones push.', 'Preparé la experiencia para funcionar tanto en iOS como en Android.', 'Enfoqué la interfaz en acceso rápido a los servicios de la empresa.'],
+          tags: ['React Native', 'Expo', 'Notificaciones push', 'iOS', 'Android']
+        },
+        en: {
+          kicker: 'PRODUCT CASE 04 · DUAL APP',
+          title: 'Dual App',
+          summary: 'Cross-platform mobile application designed to provide fast access to Dual services.',
+          label: 'What I built',
+          points: ['Developed the application using React Native and Expo.', 'Implemented push notification support.', 'Prepared the experience to work across both iOS and Android.', 'Focused the interface on fast access to company services.'],
+          tags: ['React Native', 'Expo', 'Push Notifications', 'iOS', 'Android']
+        }
+      },
+      jebryx: {
+        es: {
+          kicker: 'PRODUCTO PROPIO 05 · EN DESARROLLO',
+          title: 'JEBRYX',
+          summary: 'Aplicación móvil propia de finanzas personales desarrollada con React Native y Expo, actualmente en construcción.',
+          label: 'Mi responsabilidad',
+          points: ['Soy uno de los cofundadores, propietarios y principales desarrolladores de la aplicación móvil.', 'Desarrollo la experiencia multiplataforma con React Native y Expo.', 'Implementé la integración con Google para la autenticación de usuarios.', 'Integré un asistente financiero basado en IA mediante flujos de n8n.', 'El producto continúa en desarrollo, con foco en crear una experiencia útil para la gestión de finanzas personales.'],
+          tags: ['React Native', 'Expo', 'Autenticación de Google', 'Asistente de IA', 'n8n', 'Cofundador', 'Propietario', 'En desarrollo']
+        },
+        en: {
+          kicker: 'FOUNDING PRODUCT 05 · IN DEVELOPMENT',
+          title: 'JEBRYX',
+          summary: 'An owned personal finance mobile app built with React Native and Expo, currently under active development.',
+          label: 'My responsibility',
+          points: ['I am one of the mobile app’s co-founders, owners, and lead developers.', 'I develop the cross-platform experience with React Native and Expo.', 'I implemented Google integration for user authentication.', 'I integrated an AI-powered financial coach through n8n workflows.', 'The product remains in development, focused on creating a useful personal finance management experience.'],
+          tags: ['React Native', 'Expo', 'Google Auth', 'AI Coach', 'n8n', 'Co-Founder', 'Owner', 'Work in Progress']
+        }
+      }
+    };
+
+    const dialog = document.querySelector('#case-dialog');
+    const dialogTitle = document.querySelector('#dialog-title');
+    const dialogKicker = document.querySelector('#dialog-kicker');
+    const dialogSummary = document.querySelector('#dialog-summary');
+    const dialogLabel = document.querySelector('#dialog-role-label');
+    const dialogPoints = document.querySelector('#dialog-points');
+    const dialogTags = document.querySelector('#dialog-tags');
+
+    document.querySelectorAll('.case-trigger').forEach((button) => {
+      button.addEventListener('click', () => {
+        const data = caseData[button.dataset.case][currentLang];
+        dialogKicker.textContent = data.kicker;
+        dialogTitle.textContent = data.title;
+        dialogSummary.textContent = data.summary;
+        dialogLabel.textContent = data.label;
+        dialogPoints.replaceChildren(...data.points.map((point) => Object.assign(document.createElement('li'), { textContent: point })));
+        dialogTags.replaceChildren(...data.tags.map((tagName) => Object.assign(document.createElement('span'), { className: 'tag', textContent: tagName })));
+        dialog.showModal();
+      });
+    });
+    document.querySelector('.dialog-close').addEventListener('click', () => dialog.close());
+    dialog.addEventListener('click', (event) => {
+      if (event.target === dialog) dialog.close();
+    });
+
+    const canvas = document.querySelector('#network-canvas');
+    const context = canvas.getContext('2d');
+    let particles = [];
+    let pointer = { x: -1000, y: -1000 };
+    let animationFrame;
+
+    function resizeCanvas() {
+      const ratio = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = window.innerWidth * ratio;
+      canvas.height = window.innerHeight * ratio;
+      canvas.style.width = `${window.innerWidth}px`;
+      canvas.style.height = `${window.innerHeight}px`;
+      context.setTransform(ratio, 0, 0, ratio, 0, 0);
+      const count = window.innerWidth < 700 ? 28 : 58;
+      particles = Array.from({ length: count }, () => ({
+        x: Math.random() * window.innerWidth,
+        y: Math.random() * window.innerHeight,
+        vx: (Math.random() - 0.5) * 0.16,
+        vy: (Math.random() - 0.5) * 0.16,
+        size: Math.random() * 1.4 + 0.35
+      }));
+    }
+
+    function drawNetwork() {
+      context.clearRect(0, 0, window.innerWidth, window.innerHeight);
+      particles.forEach((particle, index) => {
+        if (!prefersReducedMotion) {
+          particle.x += particle.vx;
+          particle.y += particle.vy;
+          if (particle.x < 0 || particle.x > window.innerWidth) particle.vx *= -1;
+          if (particle.y < 0 || particle.y > window.innerHeight) particle.vy *= -1;
+        }
+        context.beginPath();
+        context.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+        context.fillStyle = 'rgba(94, 234, 212, 0.36)';
+        context.fill();
+
+        particles.slice(index + 1).forEach((other) => {
+          const distance = Math.hypot(particle.x - other.x, particle.y - other.y);
+          if (distance < 118) {
+            context.beginPath();
+            context.moveTo(particle.x, particle.y);
+            context.lineTo(other.x, other.y);
+            context.strokeStyle = `rgba(94, 234, 212, ${0.075 * (1 - distance / 118)})`;
+            context.stroke();
+          }
+        });
+
+        const pointerDistance = Math.hypot(particle.x - pointer.x, particle.y - pointer.y);
+        if (pointerDistance < 150) {
+          context.beginPath();
+          context.moveTo(particle.x, particle.y);
+          context.lineTo(pointer.x, pointer.y);
+          context.strokeStyle = `rgba(184, 245, 106, ${0.16 * (1 - pointerDistance / 150)})`;
+          context.stroke();
+        }
+      });
+      if (!prefersReducedMotion) animationFrame = requestAnimationFrame(drawNetwork);
+    }
+
+    window.addEventListener('pointermove', (event) => { pointer = { x: event.clientX, y: event.clientY }; }, { passive: true });
+    window.addEventListener('resize', () => {
+      cancelAnimationFrame(animationFrame);
+      resizeCanvas();
+      drawNetwork();
+    });
+
+    document.querySelector('#year').textContent = new Date().getFullYear();
+    resizeCanvas();
+    drawNetwork();
+    applyLanguage(currentLang);
+  </script>
+</body>
+</html>
